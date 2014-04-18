@@ -26,14 +26,14 @@ var Skynetheramin = (function() {
   }
 
 
-  var major_scale = [0, 1, 3, 5, 7, 8, 10, 12];
+  var perfect_minor_scale = [0, 1, 3, 5, 7, 8, 10, 12];
 
-  function transposeNoteToMajorScale(n) {
+  function transposeNoteToMinorScale(n) {
 
       var octaves = Math.floor(n / 7);
       var leftover = n % 7;
 
-      var note_in_scale = major_scale[leftover];
+      var note_in_scale = perfect_minor_scale[leftover];
 
       return octaves * 12 + note_in_scale;
 
@@ -73,10 +73,13 @@ var Skynetheramin = (function() {
     }
 
     var initializeOscillator = function() {
-        oscillator = myAudioContext.createOscillator();
         gainNode = myAudioContext.createGainNode();
       
+        oscillator = myAudioContext.createOscillator();
         oscillator.type = 'sine';
+
+        oscillator2  = myAudioContext.createOscillator(); 
+        oscillator2.type = 'sine';
 
         var cabinet = new tuna.Cabinet({
             makeupGain: 1,                                 //0 to 20
@@ -130,11 +133,11 @@ var Skynetheramin = (function() {
         chorus.connect(compressor.input);  
         gainNode.connect(chorus.input);
         oscillator.connect(gainNode);
-
+        oscillator2.connect(gainNode);
 
         gainNode.gain.value = 0;
         oscillator.start(0);
-
+        oscillator2.start(0);
     };
 
     initializeOscillator();
@@ -197,16 +200,21 @@ var Skynetheramin = (function() {
 
     var note = Math.round(fraction * notespace);
 
-    var scaled = transposeNoteToMajorScale(note);
+    var scaled = transposeNoteToMinorScale(note);
 
     var freq = frequencyFromNote(scaled);
-    
+
     return freq;
   };
   
   Skynetheramin.setFrequency = function(value, range) {
     var frequencyValue = Skynetheramin.calculateFrequency(value, range);
     oscillator.frequency.value = frequencyValue;
+
+    // Perfect Fifth
+    oscillator2.frequency.value = frequencyFromNote(noteFromFrequency(frequencyValue) + 8);
+
+
     frequencyLabel.innerHTML = Math.floor(frequencyValue) + ' Hz';
   };
  
