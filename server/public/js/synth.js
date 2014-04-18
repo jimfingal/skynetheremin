@@ -1,3 +1,35 @@
+var SoundHelper = (function() {
+
+  var perfect_minor_scale = [0, 1, 3, 5, 7, 8, 10, 12];
+
+  var helper = {
+
+    frequencyFromNote: function(n) {
+      return Math.pow(2, n / 12) * 440.0
+    },
+
+    noteFromFrequency: function(f) {
+      return Math.round(12 * Math.log(f / 440.0) * Math.LOG2E, 0)
+    },
+
+    transposeNoteToMinorScale: function(n) {
+
+      var octaves = Math.floor(n / 7);
+      var leftover = n % 7;
+
+      var note_in_scale = perfect_minor_scale[leftover];
+
+      return octaves * 12 + note_in_scale;
+    },
+
+    fifthFromFrequency: function(freq) {
+      return this.frequencyFromNote(this.noteFromFrequency(freq) + 8);
+    }
+  }
+  return helper;
+
+})();
+  
 var Skynetheramin = (function() {
 
   // Variables
@@ -16,28 +48,6 @@ var Skynetheramin = (function() {
   var playing;
 
   var range;
-
-  function frequencyFromNote(n) {
-    return Math.pow(2, n / 12) * 440.0
-  }
-
-  function noteFromFrequency(f) {
-    return Math.round(12 * Math.log(f / 440.0) * Math.LOG2E, 0)
-  }
-
-
-  var perfect_minor_scale = [0, 1, 3, 5, 7, 8, 10, 12];
-
-  function transposeNoteToMinorScale(n) {
-
-      var octaves = Math.floor(n / 7);
-      var leftover = n % 7;
-
-      var note_in_scale = perfect_minor_scale[leftover];
-
-      return octaves * 12 + note_in_scale;
-
-  }
 
   // Constructor
   var Skynetheramin = function(s) {
@@ -200,9 +210,9 @@ var Skynetheramin = (function() {
 
     var note = Math.round(fraction * notespace);
 
-    var scaled = transposeNoteToMinorScale(note);
+    var scaled = SoundHelper.transposeNoteToMinorScale(note);
 
-    var freq = frequencyFromNote(scaled);
+    var freq = SoundHelper.frequencyFromNote(scaled);
 
     return freq;
   };
@@ -212,7 +222,7 @@ var Skynetheramin = (function() {
     oscillator.frequency.value = frequencyValue;
 
     // Perfect Fifth
-    oscillator2.frequency.value = frequencyFromNote(noteFromFrequency(frequencyValue) + 8);
+    oscillator2.frequency.value = SoundHelper.fifthFromFrequency(frequencyValue);
 
 
     frequencyLabel.innerHTML = Math.floor(frequencyValue) + ' Hz';
