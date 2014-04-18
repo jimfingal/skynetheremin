@@ -26,6 +26,8 @@ Cylon.robot({
     my.leapmotion.on('hand', function(hand) {
       Logger.info(hand.toString());
       socket.emit('send', { x: hand.palmX, y: hand.palmY, z: hand.palmZ });
+
+      // TODO: can access hands from frame
     });
 
     /*
