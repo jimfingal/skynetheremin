@@ -5,7 +5,6 @@
 
 var express = require('express')
   , routes = require('./routes')
-  , http = require('http')
   , path = require('path');
 
 var app = express();
@@ -23,6 +22,11 @@ app.configure(function(){
 
 app.get('/', routes.index);
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+var serverio = require('socket.io').listen(app.listen(app.get('port')));
+
+serverio.sockets.on('connection', function (socket) {
+    socket.emit('message', { message: 'welcome to the chat' });
+    socket.on('send', function (data) {
+        serverio.sockets.emit('message', data);
+    });
 });

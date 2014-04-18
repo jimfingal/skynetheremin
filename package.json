@@ -1,6 +1,7 @@
 {
-  "name": "app",
+  "name": "skynetheramin",
   "version": "0.0.1",
+  "description": "One theramin to rule them all",
   "private": true,
   "scripts": {
     "start": "node app"
@@ -19,6 +20,7 @@
     "underscore": "*",
     "cylon":"0.13.2",
     "requirejs":"2.1.11",
-    "cylon-leapmotion":"0.6.0"
+    "cylon-leapmotion":"0.6.0",
+    "socket.io": "latest"
   }
 }
