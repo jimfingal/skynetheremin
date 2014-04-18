@@ -1,7 +1,6 @@
 var Cylon = require('cylon');
 var io = require('socket.io-client');
 var socket = io.connect("http://localhost:4000/");
-//socket.emit('send', { message: "sent from command line" });
 
 Cylon.robot({
   connection: {
@@ -24,23 +23,20 @@ Cylon.robot({
       Logger.info("Started");
     });
 
-    my.leapmotion.on('frame', function(frame) {
-      //Logger.info(frame.toString());
-    });
-
     my.leapmotion.on('hand', function(hand) {
-      Logger.info(hand.toString());
-      socket.emit('send', { message: hand.toString() });
-
+      socket.emit('send', { x: hand.palmX, y: hand.palmY, z: hand.palmZ });
     });
-
-    /*
-    my.leapmotion.on('pointable', function(pointable) {
-      Logger.info(pointable.toString());
-    });
-    */
     my.leapmotion.on('gesture', function(gesture) {
       Logger.info(gesture.toString());
     });
+    /*
+    my.leapmotion.on('frame', function(frame) {
+      Logger.info(frame.toString());
+    });
+    my.leapmotion.on('pointable', function(pointable) {
+      Logger.info(pointable.toString());
+    });
+
+    */
   }
 }).start();

@@ -49,7 +49,7 @@ adminserver.listen(broadcastapp.get('port'));
 
 adminio.sockets.on('connection', function (socket) {
     socket.on('send', function (data) {
-        serverio.sockets.emit('message', data);
+        serverio.sockets.emit('send', data);
     });
 });
 
