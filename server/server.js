@@ -8,6 +8,13 @@ var express = require('express')
   , path = require('path')
   , io = require('socket.io');
 
+var getSocket = function (app) {
+  var server = http.createServer(app);
+  var serverio = io.listen(server).set('log level', 2);
+  server.listen(app.get('port'));
+  return serverio;
+}
+
 var app = express();
 
 app.configure(function(){
@@ -25,9 +32,7 @@ app.get('/', function(req, res){
   res.render('index', { title: 'Express' });
 });
 
-var appserver = http.createServer(app);
-var serverio = io.listen(appserver);
-appserver.listen(app.get('port'));
+var serverio = getSocket(app);
 
 serverio.sockets.on('connection', function (socket) {
     socket.emit('message', { message: 'welcome to the chat' });
@@ -43,9 +48,7 @@ broadcastapp.configure(function(){
   broadcastapp.use(broadcastapp.router);
 });
 
-var adminserver = http.createServer(broadcastapp);
-var adminio = io.listen(adminserver);
-adminserver.listen(broadcastapp.get('port'));
+var adminio = getSocket(broadcastapp);
 
 adminio.sockets.on('connection', function (socket) {
     socket.on('send', function (data) {

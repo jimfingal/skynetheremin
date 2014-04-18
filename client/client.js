@@ -24,12 +24,16 @@ Cylon.robot({
     });
 
     my.leapmotion.on('hand', function(hand) {
+      Logger.info(hand.toString());
       socket.emit('send', { x: hand.palmX, y: hand.palmY, z: hand.palmZ });
     });
+
+    /*
+    
     my.leapmotion.on('gesture', function(gesture) {
       Logger.info(gesture.toString());
     });
-    /*
+
     my.leapmotion.on('frame', function(frame) {
       Logger.info(frame.toString());
     });
