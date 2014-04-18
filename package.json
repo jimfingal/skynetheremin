@@ -16,6 +16,9 @@
     "request": "~2.27.0",
     "time-grunt": "~0.1.1",
     "load-grunt-tasks": "~0.2.0",
-    "underscore": "*"
+    "underscore": "*",
+    "cylon":"0.13.2",
+    "requirejs":"2.1.11",
+    "cylon-leapmotion":"0.6.0"
   }
 }
