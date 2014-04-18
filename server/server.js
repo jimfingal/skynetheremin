@@ -15,6 +15,8 @@ var getSocket = function (app) {
   return serverio;
 }
 
+// Apps that will listen to calls
+
 var app = express();
 
 app.configure(function(){
@@ -32,6 +34,16 @@ app.get('/', function(req, res){
   res.render('index', { title: 'Express' });
 });
 
+var broadcastapp = express();
+
+broadcastapp.configure(function(){
+  broadcastapp.set('port', process.env.PORT || 4000);
+  broadcastapp.use(broadcastapp.router);
+});
+
+
+// Sockets
+
 var serverio = getSocket(app);
 
 serverio.sockets.on('connection', function (socket) {
@@ -39,13 +51,6 @@ serverio.sockets.on('connection', function (socket) {
     socket.on('send', function (data) {
         serverio.sockets.emit('message', data);
     });
-});
-
-var broadcastapp = express();
-
-broadcastapp.configure(function(){
-  broadcastapp.set('port', process.env.PORT || 4000);
-  broadcastapp.use(broadcastapp.router);
 });
 
 var adminio = getSocket(broadcastapp);
