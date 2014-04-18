@@ -20,7 +20,7 @@ var getSocket = function (app) {
 var app = express();
 
 app.configure(function(){
-  app.set('port', process.env.PORT || 3000);
+  app.set('port', process.env.PORT || 80);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(express.favicon());
@@ -31,11 +31,7 @@ app.configure(function(){
 });
 
 app.get('/', function(req, res){
-  res.render('index', { title: 'Demo' });
-});
-
-app.get('/synth', function(req, res){
-  res.render('synth', { title: 'Synth' });
+  res.render('index', { title: 'Synth' });
 });
 
 var broadcastapp = express();

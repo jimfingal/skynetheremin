@@ -1,6 +1,5 @@
 var SynthPad = (function() {
   // Variables
-  var myCanvas;
   var frequencyLabel;
   var volumeLabel;
 
@@ -10,6 +9,11 @@ var SynthPad = (function() {
 
   var tuna;
 
+  var socket;
+
+  var playing;
+
+  var range;
 
   // Notes
   var lowNote = 261.63; // C4
@@ -17,7 +21,7 @@ var SynthPad = (function() {
 
 
   // Constructor
-  var SynthPad = function() {
+  var SynthPad = function(s) {
     myCanvas = document.getElementById('synth-pad');
     frequencyLabel = document.getElementById('frequency');
     volumeLabel = document.getElementById('volume');
@@ -26,7 +30,24 @@ var SynthPad = (function() {
     myAudioContext = new webkitAudioContext();
     tuna = new Tuna(myAudioContext);
 
+    socket = s;
+
     SynthPad.setupEventListeners();
+
+    playing = false;
+
+    range = {
+      minY: 0,
+      maxY: 400,
+      minX: -200,
+      maxX: 200,
+      xRange: function() {
+        return this.maxX - this.minX;
+      },
+      yRange: function() {
+        return this.maxY - this.minY;
+      }
+    }
   };
   
   
@@ -34,25 +55,58 @@ var SynthPad = (function() {
   SynthPad.setupEventListeners = function() {
   
     // Disables scrolling on touch devices.
+    /*
     document.body.addEventListener('touchmove', function(event) {
       event.preventDefault();
     }, false);
   
+
     myCanvas.addEventListener('mousedown', SynthPad.playSound);
     myCanvas.addEventListener('touchstart', SynthPad.playSound);
   
     myCanvas.addEventListener('mouseup', SynthPad.stopSound);
     document.addEventListener('mouseleave', SynthPad.stopSound);
     myCanvas.addEventListener('touchend', SynthPad.stopSound);
+    */
+
+    socket.on('send', function (message) {
+    
+      if (message.gestures && message.gestures.length) {
+        if (_.indexOf(message.gestures, 'keyTap') > -1) {
+          SynthPad.toggleSound(message);
+        }
+      }
+
+      if (message.hands.length > 0) {
+        SynthPad.updateFrequency(message);
+      }
+    });
+
   };
   
   
   // Play a note.
-  SynthPad.playSound = function(event) {
+  SynthPad.playSound = function(message) {
     oscillator = myAudioContext.createOscillator();
     gainNode = myAudioContext.createGainNode();
   
     oscillator.type = 'triangle';
+
+    var cabinet = new tuna.Cabinet({
+        makeupGain: 1,                                 //0 to 20
+        impulsePath: "/sound/impulse_guitar.wav",    //path to your speaker impulse
+        bypass: 0
+    });
+
+
+    var delay = new tuna.Delay({
+        feedback: 0.45,    //0 to 1+
+        delayTime: 150,    //how many milliseconds should the wet signal be delayed? 
+        wetLevel: 0.25,    //0 to 1+
+        dryLevel: 1,       //0 to 1+
+        cutoff: 20,        //cutoff frequency of the built in highpass-filter. 20 to 22050
+        bypass: 0
+    });
 
     var wahwah = new tuna.WahWah({
                  automode: true,                //true/false
@@ -82,46 +136,59 @@ var SynthPad = (function() {
                  bypass: 0
              });
 
-    compressor.connect(myAudioContext.destination);  
-    wahwah.connect(compressor.input);
-    chorus.connect(wahwah.input);  
+    cabinet.connect(myAudioContext.destination);
+    delay.connect(cabinet.input);
+    compressor.connect(delay.input);  
+    //wahwah.connect(compressor.input);
+    //chorus.connect(wahwah.input);  
+    chorus.connect(compressor.input);  
     gainNode.connect(chorus.input);
     oscillator.connect(gainNode);
   
-
-
-    SynthPad.updateFrequency(event);
-  
     oscillator.start(0);
   
-    myCanvas.addEventListener('mousemove', SynthPad.updateFrequency);
-    myCanvas.addEventListener('touchmove', SynthPad.updateFrequency);
-  
-    myCanvas.addEventListener('mouseout', SynthPad.stopSound);
   };
   
+  SynthPad.fade = function rFade(node, value, limit, interval, stop_after) {
+    node.gain.value += value;
+    if (value < 0 && node.gain.value > limit) {
+      setTimeout(function() { rFade(node, value, limit, interval, stop_after) }, interval);
+    } else if (value > 0 && node.gain.value < limit) {
+      setTimeout(function() { rFade(node, value, limit, interval, stop_after) }, interval);
+    } else if (stop_after) {
+      oscillator.stop(0);
+    }
+  };
   
   // Stop the audio.
   SynthPad.stopSound = function(event) {
-    oscillator.stop(0);
-  
-    myCanvas.removeEventListener('mousemove', SynthPad.updateFrequency);
-    myCanvas.removeEventListener('touchmove', SynthPad.updateFrequency);
-    myCanvas.removeEventListener('mouseout', SynthPad.stopSound);
+    SynthPad.fade(gainNode, -0.3, 0, 0.1, true);
   };
+
+  SynthPad.toggleSound = function(message) {
+
+    if (playing) {
+      this.stopSound(message);
+      playing = false;
+    } else {
+      this.playSound(message);
+      playing = true;
+    }
+  }
    
+
   
   // Calculate the note frequency.
   SynthPad.calculateNote = function(posX) {
     var noteDifference = highNote - lowNote;
-    var noteOffset = (noteDifference / myCanvas.offsetWidth) * (posX - myCanvas.offsetLeft);
+    var noteOffset = (noteDifference / range.xRange()) * (posX - range.minX);
     return lowNote + noteOffset;
   };
   
   
   // Calculate the volume.
   SynthPad.calculateVolume = function(posY) {
-    var volumeLevel = 1 - (((100 / myCanvas.offsetHeight) * (posY - myCanvas.offsetTop)) / 100);
+    var volumeLevel = 1 - (((100 / range.yRange()) * (posY - range.minY)) / 100);
     return volumeLevel;
   };
   
@@ -140,15 +207,11 @@ var SynthPad = (function() {
   
   
   // Update the note frequency.
-  SynthPad.updateFrequency = function(event) {
-    if (event.type == 'mousedown' || event.type == 'mousemove') {
-      SynthPad.calculateFrequency(event.x, event.y);
-    } else if (event.type == 'touchstart' || event.type == 'touchmove') {
-      var touch = event.touches[0];
-      SynthPad.calculateFrequency(touch.pageX, touch.pageY);
+ SynthPad.updateFrequency = function(message) {
+    if (message.hands) {
+      SynthPad.calculateFrequency(message.hands[0].y, message.hands[0].x);
     }
-  };
-  
+  }
   
   // Export SynthPad.
   return SynthPad;
@@ -157,5 +220,7 @@ var SynthPad = (function() {
 
 // Initialize the page.
 window.onload = function() {
-  var synthPad = new SynthPad();
+  var socket = io.connect(window.location.hostname);
+
+  var synthPad = new SynthPad(socket);
 }

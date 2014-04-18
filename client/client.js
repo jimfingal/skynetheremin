@@ -6,8 +6,34 @@ if (target === undefined) {
 }
 
 var Cylon = require('cylon');
+var _ = require('underscore');
 var io = require('socket.io-client');
 var socket = io.connect(target);
+
+var message = {
+  'hands' : [],
+  'gestures' : [],
+};
+
+function resetMessage(message) {
+    message.hands.length = 0;
+    message.gestures.length = 0;
+  }
+
+function messageFromFrame(frame) {
+
+  resetMessage(message);
+
+  _.forEach(frame.hands, function(hand) {
+    message.hands.push({ x: hand.palmX, y: hand.palmY, z: hand.palmZ });
+  });
+
+  _.forEach(frame.gestures, function(gesture) {
+    message.gestures.push(gesture.type);
+  });
+
+  return message;
+}
 
 Cylon.robot({
   connection: {
@@ -30,14 +56,25 @@ Cylon.robot({
       Logger.info("Started");
     });
 
+    my.leapmotion.on('frame', function(frame) {
+      //Logger.info(frame.toString());
+
+      var message = messageFromFrame(frame);
+      if (message.gestures.length) {
+        console.log(message);
+          socket.emit('send', message);
+      }
+
+    });
+
+
+    /*
+
     my.leapmotion.on('hand', function(hand) {
       Logger.info(hand.toString());
       socket.emit('send', { x: hand.palmX, y: hand.palmY, z: hand.palmZ });
 
-      // TODO: can access hands from frame
     });
-
-    /*
     
     my.leapmotion.on('gesture', function(gesture) {
       Logger.info(gesture.toString());
