@@ -48,9 +48,7 @@ adminserver.listen(broadcastapp.get('port'));
 
 adminio.sockets.on('connection', function (socket) {
     socket.on('send', function (data) {
-        console.log("Got an admin connection: " + data.message);
         serverio.sockets.emit('message', data);
-
     });
 });
 
