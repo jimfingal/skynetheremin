@@ -1,25 +1,38 @@
 var SoundHelper = (function() {
 
-  var perfect_minor_scale = [0, 1, 3, 5, 7, 8, 10, 12];
+  var perfect_minor = [0, 1, 3, 5, 7, 8, 10, 12];
+  var pentatonic = [0, 2, 4, 7, 9, 11];
 
+  //var base_frequency = 440.0;
+  var base_frequency = 523.25;
   var helper = {
 
     frequencyFromNote: function(n) {
-      return Math.pow(2, n / 12) * 440.0
+      return Math.pow(2, n / 12) * base_frequency;
     },
 
     noteFromFrequency: function(f) {
-      return Math.round(12 * Math.log(f / 440.0) * Math.LOG2E, 0)
+      return Math.round(12 * Math.log(f / base_frequency) * Math.LOG2E, 0)
+    },
+
+    transposeNoteToScale: function(n, scale) {
+
+      var scale_length = scale.length - 1;
+
+      var octaves = Math.floor(n / scale_length);
+      var leftover = n % scale_length;
+
+      var note_in_scale = scale[leftover];
+
+      return octaves * 12 + note_in_scale;
+    },
+
+    transposeNoteToPentatonicScale: function(n) {
+      return this.transposeNoteToScale(n, pentatonic);
     },
 
     transposeNoteToMinorScale: function(n) {
-
-      var octaves = Math.floor(n / 7);
-      var leftover = n % 7;
-
-      var note_in_scale = perfect_minor_scale[leftover];
-
-      return octaves * 12 + note_in_scale;
+      return this.transposeNoteToScale(n, perfect_minor);
     },
 
     fifthFromFrequency: function(freq) {
@@ -143,11 +156,11 @@ var Skynetheramin = (function() {
         chorus.connect(compressor.input);  
         gainNode.connect(chorus.input);
         oscillator.connect(gainNode);
-        oscillator2.connect(gainNode);
+        //oscillator2.connect(gainNode);
 
         gainNode.gain.value = 0;
         oscillator.start(0);
-        oscillator2.start(0);
+        //oscillator2.start(0);
     };
 
     initializeOscillator();
@@ -205,12 +218,12 @@ var Skynetheramin = (function() {
   // Calculate the note frequency.
   Skynetheramin.calculateFrequency = function(value, range) {
 
-    var notespace = 15;
+    var notespace = 10;
     var fraction = value / range.max;
 
     var note = Math.round(fraction * notespace);
 
-    var scaled = SoundHelper.transposeNoteToMinorScale(note);
+    var scaled = SoundHelper.transposeNoteToPentatonicScale(note);
 
     var freq = SoundHelper.frequencyFromNote(scaled);
 
