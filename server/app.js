@@ -22,7 +22,9 @@ app.configure(function(){
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
-app.get('/', routes.index);
+app.get('/', function(req, res){
+  res.render('index', { title: 'Express' });
+});
 
 var appserver = http.createServer(app);
 var serverio = io.listen(appserver);
