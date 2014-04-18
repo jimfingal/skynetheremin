@@ -1,6 +1,6 @@
 sudo apt-get -y update
 sudo apt-get -y upgrade
-sudo apt-get install -y vim git ufw git-core curl build-essential openssl libssl-dev python g++ make checkinstall fakeroot libpcre3-dev software-properties-common
+sudo apt-get install -y vim git ufw git-core curl build-essential openssl libssl-dev python g++ make checkinstall fakeroot libpcre3-dev software-properties-common supervisor
 
 # From https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
 src=$(mktemp -d) && cd $src
@@ -12,14 +12,16 @@ sudo dpkg -i node_*
 
 
 sudo useradd -d /home/node -s /bin/bash -m node
-su - node
 
+su - node
 git clone https://github.com/jimmytheleaf/skynetheramin.git
 cd skynetheramin
-
+npm install
+exit
 
 # nginx
-add-apt-repository ppa:nginx/stable
+sudo add-apt-repository ppa:nginx/stable
+sudo apt-get update
 
 sudo cp /home/node/skynetheramin/skynet.nginx /etc/nginx/sites-available/skynet
 cd /etc/nginx/sites-enabled/
