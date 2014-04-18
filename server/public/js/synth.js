@@ -25,6 +25,20 @@ var Skynetheramin = (function() {
     return Math.round(12 * Math.log(f / 440.0) * Math.LOG2E, 0)
   }
 
+
+  var major_scale = [0, 1, 3, 5, 7, 8, 10, 12];
+
+  function transposeNoteToMajorScale(n) {
+
+      var octaves = Math.floor(n / 7);
+      var leftover = n % 7;
+
+      var note_in_scale = major_scale[leftover];
+
+      return octaves * 12 + note_in_scale;
+
+  }
+
   // Constructor
   var Skynetheramin = function(s) {
     frequencyLabel = document.getElementById('frequency');
@@ -180,9 +194,14 @@ var Skynetheramin = (function() {
 
     var notespace = 15;
     var fraction = value / range.max;
-    var note = frequencyFromNote(Math.round(fraction * notespace));
 
-    return note;
+    var note = Math.round(fraction * notespace);
+
+    var scaled = transposeNoteToMajorScale(note);
+
+    var freq = frequencyFromNote(scaled);
+    
+    return freq;
   };
   
   Skynetheramin.setFrequency = function(value, range) {
