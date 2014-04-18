@@ -142,9 +142,9 @@ var Skynetheramin = (function() {
                      });
 
         var chorus = new tuna.Chorus({
-                     rate: 1.5,
-                     feedback: 0.2,
-                     delay: 0.0045,
+                     rate: 6,
+                     feedback: 0.5,
+                     delay: 0.01,
                      bypass: 0
                  });
 
