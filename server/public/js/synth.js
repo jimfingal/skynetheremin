@@ -17,10 +17,13 @@ var Skynetheramin = (function() {
 
   var range;
 
-  // Notes
-  var lowNote = 261.63; // C4
-  var highNote = 493.88; // B4
+  function frequencyFromNote(n) {
+    return Math.pow(2, n / 12) * 440.0
+  }
 
+  function noteFromFrequency(f) {
+    return Math.round(12 * Math.log(f / 440.0) * Math.LOG2E, 0)
+  }
 
   // Constructor
   var Skynetheramin = function(s) {
@@ -29,7 +32,7 @@ var Skynetheramin = (function() {
   
     // Create an audio context.
     myAudioContext = new webkitAudioContext();
-    
+
     tuna = new Tuna(myAudioContext);
 
     socket = s;
@@ -174,9 +177,12 @@ var Skynetheramin = (function() {
 
   // Calculate the note frequency.
   Skynetheramin.calculateFrequency = function(value, range) {
-    var noteDifference = highNote - lowNote;
-    var noteOffset = (noteDifference / range.spread()) * (value - range.min);
-    return lowNote + noteOffset;
+
+    var notespace = 15;
+    var fraction = value / range.max;
+    var note = frequencyFromNote(Math.round(fraction * notespace));
+
+    return note;
   };
   
   Skynetheramin.setFrequency = function(value, range) {
