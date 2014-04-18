@@ -31,7 +31,11 @@ app.configure(function(){
 });
 
 app.get('/', function(req, res){
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Demo' });
+});
+
+app.get('/synth', function(req, res){
+  res.render('synth', { title: 'Synth' });
 });
 
 var broadcastapp = express();
@@ -47,7 +51,6 @@ broadcastapp.configure(function(){
 var serverio = getSocket(app);
 
 serverio.sockets.on('connection', function (socket) {
-    socket.emit('message', { message: 'welcome to the chat' });
     socket.on('send', function (data) {
         serverio.sockets.emit('message', data);
     });

@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  #page-wrapper.clearfix
+    canvas#synth-pad
+    #info
+      h1 Web Audio Synth Pad
+      p Click and drag the mouse over the synthesizer pad to generate a sound.
+      p Frequency:
+        span#frequency n/a
+      p Volume:
+        span#volume n/a
+  script(src='/js/tuna.js')
+  script(src='/js/synth.js')
