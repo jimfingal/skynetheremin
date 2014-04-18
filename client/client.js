@@ -1,6 +1,13 @@
+var target = process.argv[2];
+
+if (target === undefined) {
+  console.log("Must have a host. Ex: http://localhost:4000");
+  process.kill();
+}
+
 var Cylon = require('cylon');
 var io = require('socket.io-client');
-var socket = io.connect("http://localhost:4000/");
+var socket = io.connect(target);
 
 Cylon.robot({
   connection: {
