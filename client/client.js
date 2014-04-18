@@ -60,10 +60,11 @@ Cylon.robot({
       //Logger.info(frame.toString());
 
       var message = messageFromFrame(frame);
-      if (message.gestures.length) {
+      if (message.gestures.length || message.hands.length) {
         console.log(message);
-          socket.emit('send', message);
       }
+
+      socket.emit('send', message);
 
     });
 
