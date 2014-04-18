@@ -7,19 +7,13 @@ $(document).ready(function() {
  
     socket.on('message', function (data) {
         if(data.message) {
-            messages.push(data);
-            var html = '';
-            for(var i=0; i<messages.length; i++) {
-                html += messages[i].message + '<br />';
-            }
-            content.innerHTML = html;
+            $('div#content').prepend("<div>" + data.message + "</div>");
         } else {
             console.log("There is a problem:", data);
         }
     });
  
     sendButton.click(function() {
-
         var text = field.val();
         socket.emit('send', { message: text });
     });
