@@ -220,7 +220,8 @@ var SynthPad = (function() {
 
 // Initialize the page.
 window.onload = function() {
-  var socket = io.connect(window.location.hostname);
-
+  var loc = window.location;
+  var url = location.protocol + "//" + location.hostname + ":" + location.port;
+  var socket = io.connect(url);
   var synthPad = new SynthPad(socket);
 }
