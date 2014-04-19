@@ -1,6 +1,6 @@
-define(['underscore', 'Tuna', 'js/soundhelper.js'], 
+define(['underscore', 'Tuna', 'js/soundhelper.js', 'js/leapconfig.js'], 
 
-function(_, Tuna, SoundHelper) {
+function(_, Tuna, SoundHelper, leapconfig) {
 
   // Variables
   var frequencyLabel;
@@ -18,6 +18,7 @@ function(_, Tuna, SoundHelper) {
   var playing;
 
   var range;
+  var vertical_bands;
 
   // Constructor
   var Skynetheramin = function(s) {
@@ -35,22 +36,8 @@ function(_, Tuna, SoundHelper) {
 
     playing = false;
 
-    range = {
-      y: {
-        min: 0,
-        max: 400,
-        spread: function() {
-          return this.max - this.min;
-        }
-      },
-      x: {
-        min: -200,
-        max: 200,
-        spread: function() {
-          return this.max - this.min;
-        }
-      }
-    }
+    range = leapconfig.range;
+    vertical_bands = leapconfig.vertical_bands;
 
     var initializeOscillator = function() {
         gainNode = myAudioContext.createGainNode();
@@ -175,10 +162,9 @@ function(_, Tuna, SoundHelper) {
   // Calculate the note frequency.
   Skynetheramin.calculateFrequency = function(value, range) {
 
-    var notespace = 10;
     var fraction = value / range.max;
 
-    var note = Math.round(fraction * notespace);
+    var note = Math.round(fraction * vertical_bands);
 
     var scaled = SoundHelper.transposeNoteToPentatonicScale(note);
 
