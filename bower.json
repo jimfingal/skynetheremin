@@ -1,0 +1,15 @@
+{
+  "name": "skynetheramin",
+  "version": "0.0.1",
+  "description": "One theramin to rule them all",
+  "private": true,
+  "ignore": [
+    ".jshintrc",
+    "**/*.txt"
+  ],
+  "dependencies": {
+    "underscore": "latest",
+    "socket.io": "latest",
+    "requirejs": "latest"
+  }
+}
