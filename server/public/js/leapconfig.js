@@ -19,7 +19,6 @@ define(function() {
 
     var vdiv = 10;
 
-
     var leap_config = {};
     leap_config.range = range;
     leap_config.vertical_bands = vdiv;

@@ -16,9 +16,9 @@ var message = {
 };
 
 function resetMessage(message) {
-    message.inputs.length = 0;
-    message.commands.length = 0;
-  }
+  message.inputs.length = 0;
+  message.commands.length = 0;
+}
 
 function messageFromFrame(frame) {
 
@@ -71,26 +71,5 @@ Cylon.robot({
 
     });
 
-
-    /*
-
-    my.leapmotion.on('hand', function(hand) {
-      Logger.info(hand.toString());
-      socket.emit('send', { x: hand.palmX, y: hand.palmY, z: hand.palmZ });
-
-    });
-    
-    my.leapmotion.on('gesture', function(gesture) {
-      Logger.info(gesture.toString());
-    });
-
-    my.leapmotion.on('frame', function(frame) {
-      Logger.info(frame.toString());
-    });
-    my.leapmotion.on('pointable', function(pointable) {
-      Logger.info(pointable.toString());
-    });
-
-    */
   }
 }).start();
