@@ -11,13 +11,13 @@ var io = require('socket.io-client');
 var socket = io.connect(target);
 
 var message = {
-  'hands' : [],
-  'gestures' : [],
+  'inputs' : [],
+  'commands' : [],
 };
 
 function resetMessage(message) {
-    message.hands.length = 0;
-    message.gestures.length = 0;
+    message.inputs.length = 0;
+    message.commands.length = 0;
   }
 
 function messageFromFrame(frame) {
@@ -25,11 +25,14 @@ function messageFromFrame(frame) {
   resetMessage(message);
 
   _.forEach(frame.hands, function(hand) {
-    message.hands.push({ x: hand.palmX, y: hand.palmY, z: hand.palmZ });
+    message.inputs.push({ x: hand.palmX, y: hand.palmY, z: hand.palmZ });
   });
 
   _.forEach(frame.gestures, function(gesture) {
-    message.gestures.push(gesture.type);
+
+    if (gesture.type === 'keyTap') {
+       message.commands.push('power');
+    }
   });
 
   return message;
@@ -57,10 +60,10 @@ Cylon.robot({
     });
 
     my.leapmotion.on('frame', function(frame) {
-      //Logger.info(frame.toString());
 
       var message = messageFromFrame(frame);
-      if (message.gestures.length || message.hands.length) {
+
+      if (message.commands.length || message.inputs.length) {
         console.log(message);
       }
 

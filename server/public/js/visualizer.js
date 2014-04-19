@@ -22,10 +22,8 @@ define(['js/leapconfig.js', 'jquery'], function(leapconfig, $) {
   SkynetVisualizer.setupMessageListeners = function() {
   
     socket.on('send', function (message) {
-      if (message.hands.length > 0) {
-
-
-        SkynetVisualizer.updateLabels(message);
+      if (message.inputs.length > 0) {
+        SkynetVisualizer.updateLabels(message.inputs[0]);
       }
     });
 
@@ -40,11 +38,9 @@ define(['js/leapconfig.js', 'jquery'], function(leapconfig, $) {
   };
   
   // Update the note frequency.
- SkynetVisualizer.updateLabels = function(message) {
-    if (message.hands) {
-      SkynetVisualizer.setFrequencyLabel(message.hands[0].y);
-      SkynetVisualizer.setVolumeLabel(message.hands[0].x);
-    }
+ SkynetVisualizer.updateLabels = function(input) {
+    SkynetVisualizer.setFrequencyLabel(input.y);
+    SkynetVisualizer.setVolumeLabel(input.x);
   }
   
   return SkynetVisualizer;

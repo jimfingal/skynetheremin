@@ -22,13 +22,13 @@ function(_, SkynetSynth, SoundHelper, leapconfig) {
   
     socket.on('send', function (message) {
     
-      if (message.gestures && message.gestures.length) {
-        if (_.indexOf(message.gestures, 'keyTap') > -1) {
+      if (message.commands && message.commands.length) {
+        if (_.indexOf(message.commands, 'power') > -1) {
           synth.toggleSound();
         }
       }
-      if (message.hands.length > 0 && synth.isPlaying()) {
-        Skynetheramin.updateSound(message);
+      if (message.inputs.length > 0 && synth.isPlaying()) {
+        Skynetheramin.updateSound(message.inputs[0]);
       }
     });
 
@@ -62,11 +62,9 @@ function(_, SkynetSynth, SoundHelper, leapconfig) {
   };
   
   // Update the note frequency.
- Skynetheramin.updateSound = function(message) {
-    if (message.hands) {
-      Skynetheramin.setFrequency(message.hands[0].y, config.range.y);
-      Skynetheramin.setVolume(message.hands[0].x, config.range.x);
-    }
+ Skynetheramin.updateSound = function(input) {
+    Skynetheramin.setFrequency(input.y, config.range.y);
+    Skynetheramin.setVolume(input.x, config.range.x);
   }
   
   // Export Skynetheramin.
