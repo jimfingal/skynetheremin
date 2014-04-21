@@ -12,7 +12,7 @@ define(function() {
     },
 
     noteFromFrequency: function(f) {
-      return Math.round(12 * Math.log(f / base_frequency) * Math.LOG2E, 0)
+      return Math.round(12 * Math.log(f / base_frequency) * Math.LOG2E, 0);
     },
 
     transposeNoteToScale: function(n, scale) {
@@ -38,7 +38,8 @@ define(function() {
     fifthFromFrequency: function(freq) {
       return this.frequencyFromNote(this.noteFromFrequency(freq) + 8);
     }
-  }
+  };
+  
   return helper;
 
 });

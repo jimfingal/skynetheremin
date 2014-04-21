@@ -17,32 +17,32 @@ define(['js/leapconfig.js', 'jquery'], function(leapconfig, $) {
     SkynetVisualizer.setupMessageListeners();
 
   };
-    
+  
   // Event Listeners
   SkynetVisualizer.setupMessageListeners = function() {
-  
-    socket.on('send', function (message) {
+
+    socket.on('send', function(message) {
       if (message.inputs.length > 0) {
         SkynetVisualizer.updateLabels(message.inputs[0]);
       }
     });
 
   };
-  
+
   SkynetVisualizer.setFrequencyLabel = function(value) {
-    frequencyLabel.innerHTML = value + "y";
+    frequencyLabel.innerHTML = value + 'y';
   };
- 
+
   SkynetVisualizer.setVolumeLabel = function(value) {
     volumeLabel.innerHTML = value + 'x';
   };
-  
+
   // Update the note frequency.
  SkynetVisualizer.updateLabels = function(input) {
     SkynetVisualizer.setFrequencyLabel(input.y);
     SkynetVisualizer.setVolumeLabel(input.x);
-  }
-  
+  };
+
   return SkynetVisualizer;
 
 });

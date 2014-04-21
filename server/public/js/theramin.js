@@ -1,4 +1,4 @@
-define(['underscore', 'js/synth.js', 'js/soundhelper.js', 'js/leapconfig.js'], 
+define(['underscore', 'js/synth.js', 'js/soundhelper.js', 'js/leapconfig.js'],
 
 function(_, SkynetSynth, SoundHelper, leapconfig) {
 
@@ -8,7 +8,7 @@ function(_, SkynetSynth, SoundHelper, leapconfig) {
 
   // Constructor
   var Skynetheramin = function(s) {
-  
+
     socket = s;
     config = leapconfig;
     synth = new SkynetSynth();
@@ -16,12 +16,12 @@ function(_, SkynetSynth, SoundHelper, leapconfig) {
     Skynetheramin.setupMessageListeners();
 
   };
-    
+
   // Event Listeners
   Skynetheramin.setupMessageListeners = function() {
-  
-    socket.on('send', function (message) {
-    
+
+    socket.on('send', function(message) {
+
       if (message.commands && message.commands.length) {
         if (_.indexOf(message.commands, 'power') > -1) {
           synth.toggleSound();
@@ -44,12 +44,12 @@ function(_, SkynetSynth, SoundHelper, leapconfig) {
 
     return freq;
   };
-  
+
   Skynetheramin.setFrequency = function(value, range) {
     var frequencyValue = Skynetheramin.calculateFrequency(value, range);
     synth.setFrequency(frequencyValue);
   };
- 
+
   // Calculate the volume.
   Skynetheramin.calculateVolume = function(value, range) {
     var volumeLevel = 1 - (((100 / range.spread()) * (value - range.min)) / 100);
@@ -57,16 +57,16 @@ function(_, SkynetSynth, SoundHelper, leapconfig) {
   };
 
   Skynetheramin.setVolume = function(value, range) {
-    var volumeValue = Skynetheramin.calculateVolume(value, range);  
+    var volumeValue = Skynetheramin.calculateVolume(value, range);
     synth.setVolume(volumeValue);
   };
-  
+
   // Update the note frequency.
  Skynetheramin.updateSound = function(input) {
     Skynetheramin.setFrequency(input.y, config.range.y);
     Skynetheramin.setVolume(input.x, config.range.x);
-  }
-  
+  };
+
   // Export Skynetheramin.
   return Skynetheramin;
 

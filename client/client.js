@@ -1,7 +1,7 @@
 var target = process.argv[2];
 
 if (target === undefined) {
-  console.log("Must have a host. Ex: http://localhost:4000");
+  console.log('Must have a host. Ex: http://localhost:4000');
   process.kill();
 }
 
@@ -12,7 +12,7 @@ var socket = io.connect(target);
 
 var message = {
   'inputs' : [],
-  'commands' : [],
+  'commands' : []
 };
 
 function resetMessage(message) {
@@ -52,11 +52,11 @@ Cylon.robot({
 
   work: function(my) {
     my.leapmotion.on('connect', function() {
-      Logger.info("Connected");
+      Logger.info('Connected');
     });
 
     my.leapmotion.on('start', function() {
-      Logger.info("Started");
+      Logger.info('Started');
     });
 
     my.leapmotion.on('frame', function(frame) {

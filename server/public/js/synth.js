@@ -6,7 +6,7 @@ define(['Tuna', 'js/soundhelper.js'], function(Tuna, SoundHelper) {
         var myAudioContext = new webkitAudioContext();
 
         this.playing = false;
-        this.gainNode = myAudioContext.createGainNode();      
+        this.gainNode = myAudioContext.createGainNode();
         this.oscillator = myAudioContext.createOscillator();
         this.oscillator.type = 'sine';
 
@@ -15,7 +15,7 @@ define(['Tuna', 'js/soundhelper.js'], function(Tuna, SoundHelper) {
 
         var cabinet = new tuna.Cabinet({
             makeupGain: 1,                                 //0 to 20
-            impulsePath: "/sound/impulse_guitar.wav",    //path to your speaker impulse
+            impulsePath: '/sound/impulse_guitar.wav',    //path to your speaker impulse
             bypass: 0
         });
 
@@ -72,19 +72,19 @@ define(['Tuna', 'js/soundhelper.js'], function(Tuna, SoundHelper) {
         this.gainNode.gain.value = 0;
         this.oscillator.start(0);
 
-    }
+    };
 
     SkynetSynth.prototype.setFrequency = function(value) {
        this.oscillator.frequency.value = value;
-    }
+    };
 
     SkynetSynth.prototype.setVolume = function(value) {
        this.gainNode.gain.value = value;
-    }
+    };
 
     SkynetSynth.prototype.isPlaying = function() {
         return this.playing;
-    }
+    };
 
     SkynetSynth.prototype.playSound = function() {
         this.playing = true;
@@ -99,9 +99,17 @@ define(['Tuna', 'js/soundhelper.js'], function(Tuna, SoundHelper) {
 
         node.gain.value += value;
         if (value < 0 && node.gain.value > limit) {
-          setTimeout(function() { rFade(node, value, limit, interval, stop_after) }, interval);
+
+          setTimeout(function() { 
+            rFade(node, value, limit, interval, stop_after);
+          }, interval);
+
         } else if (value > 0 && node.gain.value < limit) {
-          setTimeout(function() { rFade(node, value, limit, interval, stop_after) }, interval);
+          
+          setTimeout(function() { 
+            rFade(node, value, limit, interval, stop_after);
+          }, interval);
+
         } else if (stop_after) {
           node.gain.value = 0;
         }
@@ -113,7 +121,7 @@ define(['Tuna', 'js/soundhelper.js'], function(Tuna, SoundHelper) {
         } else {
           this.playSound();
         }
-    }
+    };
 
     return SkynetSynth;
 

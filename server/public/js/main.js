@@ -10,10 +10,10 @@ requirejs.config({
     }
 });
 
-requirejs(['socket.io/socket.io.js', 'js/theramin.js', 'js/visualizer.js'], 
+requirejs(['socket.io/socket.io.js', 'js/theramin.js', 'js/visualizer.js'],
             function(io, Skynetheramin, SkynetVisualizer) {
   var loc = window.location;
-  var url = location.protocol + "//" + location.hostname + ":" + location.port;
+  var url = location.protocol + '//' + location.hostname + ':' + location.port;
   var socket = io.connect(url);
   var skynet = new Skynetheramin(socket);
   var visualizer = new SkynetVisualizer(socket);

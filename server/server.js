@@ -3,23 +3,23 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , http = require('http')
-  , path = require('path')
-  , io = require('socket.io');
+var express = require('express'), 
+  http = require('http'), 
+  path = require('path'), 
+  io = require('socket.io');
 
-var getSocket = function (app) {
+var getSocket = function(app) {
   var server = http.createServer(app);
   var serverio = io.listen(server).set('log level', 2);
   server.listen(app.get('port'));
   return serverio;
-}
+};
 
 // Apps that will listen to calls
 
 var app = express();
 
-app.configure(function(){
+app.configure(function() {
   //app.set('port', process.env.PORT || 80);
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
@@ -31,13 +31,13 @@ app.configure(function(){
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
-app.get('/', function(req, res){
+app.get('/', function(req, res) {
   res.render('index', { title: 'Synth' });
 });
 
 var broadcastapp = express();
 
-broadcastapp.configure(function(){
+broadcastapp.configure(function() {
   broadcastapp.set('port', process.env.PORT || 4000);
   broadcastapp.use(broadcastapp.router);
 });
@@ -47,19 +47,16 @@ broadcastapp.configure(function(){
 
 var serverio = getSocket(app);
 
-serverio.sockets.on('connection', function (socket) {
-    socket.on('send', function (data) {
+serverio.sockets.on('connection', function(socket) {
+    socket.on('send', function(data) {
         serverio.sockets.emit('message', data);
     });
 });
 
 var adminio = getSocket(broadcastapp);
 
-adminio.sockets.on('connection', function (socket) {
-    socket.on('send', function (data) {
+adminio.sockets.on('connection', function(socket) {
+    socket.on('send', function(data) {
         serverio.sockets.emit('send', data);
     });
 });
-
-
-
