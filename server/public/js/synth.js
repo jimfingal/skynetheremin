@@ -1,85 +1,61 @@
-define(['Tuna', 'js/soundhelper.js'], function(Tuna, SoundHelper) {
+define(['Tuna', 'js/soundhelper.js', 'js/voice.js'], 
+       function(Tuna, SoundHelper, Voice) {
+
+    var audioContext = new webkitAudioContext();    
+
+    /*
+    Attack time is the time taken for initial run-up of level from nil to peak, beginning when the key is first pressed.
+    Decay time is the time taken for the subsequent run down from the attack level to the designated sustain level.
+    Sustain level is the level during the main sequence of the sound's duration, until the key is released.
+    Release time is the time taken for the level to decay from the sustain level to zero after the key is released.
+    */
+
+
 
     var SkynetSynth = function() {
          // Create an audio context.
 
-        var myAudioContext = new webkitAudioContext();
-
         this.playing = false;
-        this.gainNode = myAudioContext.createGainNode();
-        this.oscillator = myAudioContext.createOscillator();
-        this.oscillator.type = 'sine';
 
+        this.effectChain = audioContext.createGainNode();
 
-        var tuna = new Tuna(myAudioContext);
+        this.globalVolume = audioContext.createGainNode(); 
+        this.globalVolume.gain.value = 0;
 
-        var cabinet = new tuna.Cabinet({
-            makeupGain: 1,                                 //0 to 20
-            impulsePath: '/sound/impulse_guitar.wav',    //path to your speaker impulse
-            bypass: 0
-        });
+        this.oscillator = new Voice(audioContext);
+        this.oscillator.connect(this.effectChain);
 
+        this.effectChain.connect(this.globalVolume);
+        this.globalVolume.connect(audioContext.destination);
 
-        var delay = new tuna.Delay({
-            feedback: 0.45,    //0 to 1+
-            delayTime: 150,    //how many milliseconds should the wet signal be delayed? 
-            wetLevel: 0.25,    //0 to 1+
-            dryLevel: 1,       //0 to 1+
-            cutoff: 20,        //cutoff frequency of the built in highpass-filter. 20 to 22050
-            bypass: 0
-        });
-
-        var wahwah = new tuna.WahWah({
-             automode: true,                //true/false
-             baseFrequency: 0.5,            //0 to 1
-             excursionOctaves: 2,           //1 to 6
-             sweep: 0.2,                    //0 to 1
-             resonance: 10,                 //1 to 100
-             sensitivity: 0.5,              //-1 to 1
-             bypass: 0
-         });
-
-        var compressor = new tuna.Compressor({
-             threshold: 0.5,    //-100 to 0
-             makeupGain: 1,     //0 and up
-             attack: 1,         //0 to 1000
-             release: 0,        //0 to 3000
-             ratio: 4,          //1 to 20
-             knee: 5,           //0 to 40
-             automakeup: true,  //true/false
-             bypass: 0
-         });
-
-        var chorus = new tuna.Chorus({
-             rate: 6,
-             feedback: 0.5,
-             delay: 0.01,
-             bypass: 0
-        });
-
-
-        cabinet.connect(myAudioContext.destination);
-        delay.connect(cabinet.input);
-        compressor.connect(delay.input);  
-        //wahwah.connect(compressor.input);
-        //chorus.connect(wahwah.input);  
-        chorus.connect(compressor.input);  
-        
-        this.gainNode.connect(chorus.input);
-        this.oscillator.connect(this.gainNode);
-        //oscillator2.connect(gainNode);
-
-        this.gainNode.gain.value = 0;
-        this.oscillator.start(0);
+        this.voices = new Array();
 
     };
 
+    /*
+    SynetSynth.prototype.playNote = function(value) {
+        if (this.voices[note] == null) {
+            voices[note] = new Voice(note, velocity);
+        }
+
+        function noteOn( note, velocity ) {
+    if (voices[note] == null) {
+        // Create a new synth node
+        voices[note] = new Voice(note, velocity);
+        var e = document.getElementById( "k" + note );
+        if (e)
+            e.classList.add("pressed");
+    }
+}
+    }
+    */
+
     SkynetSynth.prototype.setFrequency = function(value) {
-       this.oscillator.frequency.value = value;
+       this.oscillator.setFrequency(value);
     };
 
     SkynetSynth.prototype.setVolume = function(value) {
-       this.gainNode.gain.value = value;
+       this.globalVolume.gain.value = value;
     };
 
     SkynetSynth.prototype.isPlaying = function() {
@@ -92,7 +68,7 @@ define(['Tuna', 'js/soundhelper.js'], function(Tuna, SoundHelper) {
 
     SkynetSynth.prototype.stopSound = function() {
         this.playing = false;
-        this.fade(this.gainNode, -0.3, 0, 0.1, true);
+        this.fade(this.globalVolume, -0.3, 0, 0.1, true);
     };
 
     SkynetSynth.prototype.fade = function rFade(node, value, limit, interval, stop_after) {
@@ -100,13 +76,13 @@ define(['Tuna', 'js/soundhelper.js'], function(Tuna, SoundHelper) {
         node.gain.value += value;
         if (value < 0 && node.gain.value > limit) {
 
-          setTimeout(function() { 
+          setTimeout(function() {
             rFade(node, value, limit, interval, stop_after);
           }, interval);
 
         } else if (value > 0 && node.gain.value < limit) {
-          
-          setTimeout(function() { 
+
+          setTimeout(function() {
             rFade(node, value, limit, interval, stop_after);
           }, interval);
 

@@ -5,6 +5,7 @@ define(function() {
 
   //var base_frequency = 440.0;
   var base_frequency = 523.25;
+  
   var helper = {
 
     frequencyFromNote: function(n) {
@@ -39,7 +40,7 @@ define(function() {
       return this.frequencyFromNote(this.noteFromFrequency(freq) + 8);
     }
   };
-  
+
   return helper;
 
 });
