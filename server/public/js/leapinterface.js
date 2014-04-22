@@ -2,12 +2,14 @@ define(function() {
 
     var range = {
       y: {
+        min: 25,
         max: 500,
         spread: function() {
           return this.max - this.min;
         }
       },
       x: {
+        min: 0,
         max: 200,
         spread: function() {
           return this.max - this.min;
@@ -34,7 +36,7 @@ define(function() {
 
       for (axis in range) {
         var val = input[axis];
-        var percent = val / range[axis].max;
+        var percent = (val - range[axis].min) / range[axis].max;
         percentages[axis] = percent;
       }
 

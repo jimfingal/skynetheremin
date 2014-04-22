@@ -6,12 +6,30 @@ function(_, SkynetSynth, SoundHelper, $) {
   var synth;
 
   var vertical_bands = 10;
+  var offset;
 
   function getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  var jitter = getRandomInt(-3, 3);
+  //var jitter = getRandomInt(-3, 3);
+  var jitter = 0;
+
+  var setupJitterSlider = function() {
+
+    $('#slider-range-max').slider({
+      range: 'max',
+      min: -5,
+      max: 5,
+      value: 0,
+      slide: function(event, ui) {
+        $('#amount').text(ui.value);
+        jitter = ui.value;
+      }
+    });
+    $('#amount').text($('#slider-range-max').slider('value'));
+
+  };
 
   // Constructor
   var Skynetheremin = function(li) {
@@ -23,27 +41,20 @@ function(_, SkynetSynth, SoundHelper, $) {
     leap_interface.setCommandCallback('power', synth.toggleSound);
     leap_interface.addMessageCallback(Skynetheremin.updateSound);
 
+    setupJitterSlider();
+    offset = SoundHelper.offset();
 
-    $("#slider-range-max").slider({
-      range: "max",
-      min: -5,
-      max: 5,
-      value: 2,
-      slide: function(event, ui) {
-        $("#amount").text(ui.value);
-        jitter = ui.value;
-      }
-    });
-    $("#amount").text($("#slider-range-max").slider( "value" ));
-  
   };
 
-  Skynetheremin.setFrequency = function(value) {
-    var note = Math.round(value * vertical_bands);
+  Skynetheremin.setFrequency = function(input_percent) {
+    var note = Math.round(input_percent * vertical_bands);
     note = note + jitter;
     var scaled = SoundHelper.transposeNoteToPentatonicScale(note);
+
+    scaled = scaled + offset;
     var freq = SoundHelper.frequencyFromNote(scaled);
     synth.setFrequency(freq);
+
   };
 
   Skynetheremin.setVolume = function(value, range) {

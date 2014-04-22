@@ -1,21 +1,25 @@
 define(function() {
 
-    /*
-    Attack time is the time taken for initial run-up of level from nil to peak, beginning when the key is first pressed.
-    Decay time is the time taken for the subsequent run down from the attack level to the designated sustain level.
-    Sustain level is the level during the main sequence of the sound's duration, until the key is released.
-    Release time is the time taken for the level to decay from the sustain level to zero after the key is released.
-    */
-
-    var Envelope = function(context, attack, decay, sustain, hold, release) {
+    var Envelope = function(context, attack, decay, sustain, release) {
 
       this.context = context;
 
-      this.envelope = context.createGain();
+      this.envelope = context.createGainNode();
+
+      // Attack time is the time taken for initial run-up of level from nil
+      // to peak beginning when the sound starts.
       this.attack = attack || 0.7;
+
+      // Decay time is the time taken for the subsequent run down from the
+      // attack level to the designated sustain level.
       this.decay = decay || 0.15;
+
+      // Sustain level is the level during the main sequence of the
+      // sound's duration
       this.sustain = sustain || 0.5;
-      this.hold = hold || 1.0;
+
+      // Release time is the time taken for the level to decay from the sustain
+      // level to zero after the sound stops.
       this.release = release || 0.2;
 
       this.envelope.gain.value = 0.0;
@@ -37,7 +41,7 @@ define(function() {
       this.envelope.disconnect(0);
     };
 
-    Envelope.prototype.apply = function() {
+    Envelope.prototype.rampUp = function() {
 
       var now = this.context.currentTime;
       var attack_end = now + this.attack;
@@ -50,7 +54,7 @@ define(function() {
 
     };
 
-    Envelope.prototype.off = function() {
+    Envelope.prototype.rampDown = function() {
 
         var now = this.context.currentTime;
         var release = now + this.release;
@@ -59,8 +63,6 @@ define(function() {
         // this is necessary because of the linear ramp
         this.envelope.gain.setValueAtTime(this.envelope.gain.value, now);
         this.envelope.gain.setTargetValueAtTime(0.0, now, this.release);
-
-        this.source.stop(release);
 
     };
 

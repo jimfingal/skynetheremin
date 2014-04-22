@@ -1,19 +1,26 @@
 define(function() {
 
   var perfect_minor = [0, 1, 3, 5, 7, 8, 10, 12];
-  var pentatonic = [0, 2, 4, 7, 9, 11];
+  //var pentatonic = [0, 2, 4, 7, 9, 11];
+  var pentatonic = [0, 7, 2, 9, 4, 11];
 
-  //var base_frequency = 440.0;
-  var base_frequency = 523.25;
+  var BASE_NOTE = 49; // A4
+  var BASE_FREQUENCY = 440.0;
+
+  var DEFAULT_NOTE = 52;
 
   var helper = {
 
+    offset: function() {
+      return DEFAULT_NOTE - BASE_NOTE;
+    },
+
     frequencyFromNote: function(n) {
-      return Math.pow(2, n / 12) * base_frequency;
+      return Math.pow(2, n / 12) * BASE_FREQUENCY;
     },
 
     noteFromFrequency: function(f) {
-      return Math.round(12 * Math.log(f / base_frequency) * Math.LOG2E, 0);
+      return Math.round(12 * Math.log(f / BASE_FREQUENCY) * Math.LOG2E, 0);
     },
 
     transposeNoteToScale: function(n, scale) {

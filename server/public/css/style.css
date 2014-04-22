@@ -27,3 +27,8 @@ h1 {
 p {
     line-height: 1.8rem;
 }
+
+.slider {
+  width: 300px;
+  height: 10px;
+}

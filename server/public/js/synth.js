@@ -1,5 +1,5 @@
-define(['Tuna', 'js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js'], 
-       function(Tuna, SoundHelper, Voice, Scuzz) {
+define(['js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js'],
+       function(SoundHelper, Voice, Scuzz) {
 
     var audioContext = new webkitAudioContext();
 
