@@ -17,7 +17,7 @@ define(['jquery'], function($) {
     SkynetVisualizer.setupMessageListeners();
 
   };
-  
+
   // Event Listeners
   SkynetVisualizer.setupMessageListeners = function() {
 

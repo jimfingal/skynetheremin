@@ -1,5 +1,5 @@
-define(['Tuna', 'js/soundhelper.js', 'js/voice.js'], 
-       function(Tuna, SoundHelper, Voice) {
+define(['Tuna', 'js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js'], 
+       function(Tuna, SoundHelper, Voice, Scuzz) {
 
     var audioContext = new webkitAudioContext();
 
@@ -11,45 +11,28 @@ define(['Tuna', 'js/soundhelper.js', 'js/voice.js'],
 
     var oscillator;
 
-    var voices;
+    var analyzer;
+
 
     var SkynetSynth = function() {
          // Create an audio context.
 
         playing = false;
 
-        effectChain = audioContext.createGainNode();
+        oscillator = new Scuzz(audioContext);
 
-        globalVolume = audioContext.createGainNode(); 
+        globalVolume = audioContext.createGainNode();
         globalVolume.gain.value = 0;
 
-        oscillator = new Voice(audioContext);
-        oscillator.connect(effectChain);
+        analyzer = audioContext.createAnalyser();
+        analyzer.smoothingTimeConstant = .85;
 
-        effectChain.connect(globalVolume);
-        globalVolume.connect(audioContext.destination);
+        oscillator.connect(globalVolume);
+        globalVolume.connect(analyzer);
+        analyzer.connect(audioContext.destination);
 
-        voices = new Array();
 
     };
-
-    /*
-    SynetSynth.prototype.playNote = function(value) {
-        if (this.voices[note] == null) {
-            voices[note] = new Voice(note, velocity);
-        }
-
-        function noteOn( note, velocity ) {
-    if (voices[note] == null) {
-        // Create a new synth node
-        voices[note] = new Voice(note, velocity);
-        var e = document.getElementById( "k" + note );
-        if (e)
-            e.classList.add("pressed");
-    }
-}
-    }
-    */
 
     SkynetSynth.prototype.setFrequency = function(value) {
        oscillator.setFrequency(value);
@@ -100,6 +83,10 @@ define(['Tuna', 'js/soundhelper.js', 'js/voice.js'],
         } else {
           playSound();
         }
+    };
+
+    SkynetSynth.prototype.getAnalyzer = function() {
+        return analyzer;
     };
 
     return SkynetSynth;

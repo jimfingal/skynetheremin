@@ -25,7 +25,6 @@ define(function() {
     this.oscillator.connect(destination);
   };
 
-
   Voice.prototype.disconnect = function() {
     this.oscillator.disconnect(0);
   };

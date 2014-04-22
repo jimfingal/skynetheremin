@@ -13,7 +13,7 @@ function(_, SkynetSynth, SoundHelper) {
     leap_interface = li;
     synth = new SkynetSynth();
 
-    leap_interface.setCommandCallback("power", synth.toggleSound);
+    leap_interface.setCommandCallback('power', synth.toggleSound);
     leap_interface.addMessageCallback(Skynetheremin.updateSound);
 
   };
