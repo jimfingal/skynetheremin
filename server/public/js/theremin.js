@@ -16,17 +16,20 @@ function(SkynetSynth, $) {
 
   var setupJitterSlider = function() {
 
-    $('#slider-range-max').slider({
-      range: 'max',
-      min: -5,
-      max: 5,
+    $('#jitter').slider({
+      min: -50,
+      max: 50,
       value: 0,
+      orientation: 'horizontal',
+      animate: true,
+
       slide: function(event, ui) {
-        $('#amount').text(ui.value);
-        jitter = ui.value;
+
+        $('#amount').text(Math.round(ui.value / 10));
+        jitter = Math.round(ui.value / 10);
       }
     });
-    $('#amount').text($('#slider-range-max').slider('value'));
+    $('#amount').text(Math.round($('#jitter').slider('value') / 10));
 
   };
 
