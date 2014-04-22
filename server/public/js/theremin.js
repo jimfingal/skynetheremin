@@ -7,6 +7,12 @@ function(_, SkynetSynth, SoundHelper) {
 
   var vertical_bands = 10;
 
+  function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  var jitter = getRandomInt(-3, 3);
+
   // Constructor
   var Skynetheremin = function(li) {
 
@@ -20,6 +26,7 @@ function(_, SkynetSynth, SoundHelper) {
 
   Skynetheremin.setFrequency = function(value) {
     var note = Math.round(value * vertical_bands);
+    note = note + jitter;
     var scaled = SoundHelper.transposeNoteToPentatonicScale(note);
     var freq = SoundHelper.frequencyFromNote(scaled);
     synth.setFrequency(freq);
