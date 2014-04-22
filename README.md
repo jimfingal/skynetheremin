@@ -1,4 +1,4 @@
-skynetheramin
+skynetheremin
 =============
 
-Like a theramin, but with skynet
+Like a theremin, but with skynet
