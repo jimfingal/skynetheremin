@@ -25,12 +25,18 @@ define(function() {
 
     transposeNoteToScale: function(n, scale) {
 
+      var octaves, leftover, note_in_scale;
       var scale_length = scale.length - 1;
 
-      var octaves = Math.floor(n / scale_length);
-      var leftover = n % scale_length;
-
-      var note_in_scale = scale[leftover];
+      if (n >= 0) {
+        octaves = Math.floor(n / scale_length);
+        leftover = n % scale_length;
+        note_in_scale = scale[leftover];
+      } else {
+        octaves = -Math.floor(-n / scale_length);
+        leftover = scale_length - (-n % scale_length);
+        note_in_scale = scale[leftover] - 12; // start from an octave down
+      }
 
       return octaves * 12 + note_in_scale;
     },
