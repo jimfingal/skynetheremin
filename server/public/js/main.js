@@ -10,11 +10,12 @@ requirejs.config({
     }
 });
 
-requirejs(['socket.io/socket.io.js', 'js/theremin.js', 'js/visualizer.js'],
-            function(io, Skynetheremin, SkynetVisualizer) {
+requirejs(['socket.io/socket.io.js', 'js/theremin.js', 'js/visualizer.js', 'js/leapinterface'],
+            function(io, Skynetheremin, SkynetVisualizer, LeapInterface) {
   var loc = window.location;
   var url = location.protocol + '//' + location.hostname + ':' + location.port;
   var socket = io.connect(url);
-  var skynet = new Skynetheremin(socket);
+  var leap_interface = new LeapInterface(socket);
+  var skynet = new Skynetheremin(leap_interface);
   var visualizer = new SkynetVisualizer(socket);
 });

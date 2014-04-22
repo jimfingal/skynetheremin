@@ -1,4 +1,4 @@
-define(['js/leapconfig.js', 'jquery'], function(leapconfig, $) {
+define(['jquery'], function($) {
 
   // Variables
   var frequencyLabel;
