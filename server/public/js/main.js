@@ -17,5 +17,5 @@ requirejs(['socket.io/socket.io.js', 'js/theremin.js', 'js/visualizer.js', 'js/l
   var socket = io.connect(url);
   var leap_interface = new LeapInterface(socket);
   var skynet = new Skynetheremin(leap_interface);
-  var visualizer = new SkynetVisualizer(socket);
+  var visualizer = new SkynetVisualizer(skynet.getAnalyzer());
 });

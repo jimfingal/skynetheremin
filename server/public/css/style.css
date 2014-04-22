@@ -1,52 +1,24 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
-a {
-  color: #00B7FF;
-}
-
-/* From Synth Pad Tutorial: http://codepen.io/matt-west/pen/lAFnx */;
-html,
-body {
+html {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background: #333;
-    color: #555;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-#page-wrapper {
-    width: 875px;
-    margin: 3rem auto;
-    padding: 1.5rem;
-    background: #FFF;
-    border-top: 5px solid #69c773;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.8);
+body {
+  padding: 50px;
+  background-color: #3f3f3f;
+  color: #dcdccc;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-#synth-pad {
+#visualizer {
     float: left;
-    width: 500px;
-    height: 500px;
-    border-radius: 3px;
-    background: #1E1E1E url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAIUlEQVQYV2P8+vWrJAMRgBGkkJub+zkhtaMK8YYQ0cEDABxGJwNr5yClAAAAAElFTkSuQmCC);
+    width: 1250px;
+    height: 550px;
+    /* border-radius: 5px; */
+    background: #333333;
 }
 
-#synth-pad:hover {
-    cursor: crosshair;
-}
-
-#info {
-    margin-left: 500px;
-    padding-left: 2rem;
-    padding-top: 1rem;
-    -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-}
 
 h1 {
     font-weight: normal;
@@ -54,19 +26,4 @@ h1 {
 
 p {
     line-height: 1.8rem;
-}
-
-.clearfix {
-  *zoom: 1;
-}
-
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  line-height: 0;
-  content: "";
-}
-
-.clearfix:after {
-  clear: both;
 }

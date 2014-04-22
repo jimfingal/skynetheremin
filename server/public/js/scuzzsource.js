@@ -13,7 +13,7 @@ define(function() {
       oscillator = context.createOscillator();
       oscillator.type = 'sine';
       oscVolume = context.createGainNode();
-      oscVolume.gain.value = 1;
+      oscVolume.gain.value = 0.5;
 
 
       scuzzOscillator = context.createOscillator();

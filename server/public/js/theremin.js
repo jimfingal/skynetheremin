@@ -38,6 +38,10 @@ function(_, SkynetSynth, SoundHelper) {
     }
   };
 
+  Skynetheremin.prototype.getAnalyzer = function() {
+    return synth.getAnalyzer();
+  };
+
   // Export Skynetheremin.
   return Skynetheremin;
 
