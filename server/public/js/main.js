@@ -7,7 +7,14 @@ requirejs.config({
       'jquery-ui': 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min',
       'Tuna' : '../lib/tuna',
       'underscore' : 'underscore/underscore'
-
+    },
+    'shim': {
+        'jquery': {
+            exports: 'jQuery'
+        },
+        'jquery-ui': {
+            deps: ['jquery']
+        }
     }
 });
 
