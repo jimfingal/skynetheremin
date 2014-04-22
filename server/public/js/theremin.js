@@ -7,18 +7,18 @@ function(_, SkynetSynth, SoundHelper, leapconfig) {
   var synth;
 
   // Constructor
-  var Skynetheramin = function(s) {
+  var Skynetheremin = function(s) {
 
     socket = s;
     config = leapconfig;
     synth = new SkynetSynth();
 
-    Skynetheramin.setupMessageListeners();
+    Skynetheremin.setupMessageListeners();
 
   };
 
   // Event Listeners
-  Skynetheramin.setupMessageListeners = function() {
+  Skynetheremin.setupMessageListeners = function() {
 
     socket.on('send', function(message) {
 
@@ -28,14 +28,14 @@ function(_, SkynetSynth, SoundHelper, leapconfig) {
         }
       }
       if (message.inputs.length > 0 && synth.isPlaying()) {
-        Skynetheramin.updateSound(message.inputs[0]);
+        Skynetheremin.updateSound(message.inputs[0]);
       }
     });
 
   };
 
   // Calculate the note frequency.
-  Skynetheramin.calculateFrequency = function(value, range) {
+  Skynetheremin.calculateFrequency = function(value, range) {
 
     var fraction = value / range.max;
     var note = Math.round(fraction * config.vertical_bands);
@@ -45,29 +45,29 @@ function(_, SkynetSynth, SoundHelper, leapconfig) {
     return freq;
   };
 
-  Skynetheramin.setFrequency = function(value, range) {
-    var frequencyValue = Skynetheramin.calculateFrequency(value, range);
+  Skynetheremin.setFrequency = function(value, range) {
+    var frequencyValue = Skynetheremin.calculateFrequency(value, range);
     synth.setFrequency(frequencyValue);
   };
 
   // Calculate the volume.
-  Skynetheramin.calculateVolume = function(value, range) {
+  Skynetheremin.calculateVolume = function(value, range) {
     var volumeLevel = 1 - (((100 / range.spread()) * (value - range.min)) / 100);
     return volumeLevel;
   };
 
-  Skynetheramin.setVolume = function(value, range) {
-    var volumeValue = Skynetheramin.calculateVolume(value, range);
+  Skynetheremin.setVolume = function(value, range) {
+    var volumeValue = Skynetheremin.calculateVolume(value, range);
     synth.setVolume(volumeValue);
   };
 
   // Update the note frequency.
- Skynetheramin.updateSound = function(input) {
-    Skynetheramin.setFrequency(input.y, config.range.y);
-    Skynetheramin.setVolume(input.x, config.range.x);
+ Skynetheremin.updateSound = function(input) {
+    Skynetheremin.setFrequency(input.y, config.range.y);
+    Skynetheremin.setVolume(input.x, config.range.x);
   };
 
-  // Export Skynetheramin.
-  return Skynetheramin;
+  // Export Skynetheremin.
+  return Skynetheremin;
 
 });
