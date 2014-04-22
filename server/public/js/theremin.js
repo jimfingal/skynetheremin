@@ -1,6 +1,6 @@
-define(['underscore', 'js/synth.js', 'js/soundhelper.js'],
+define(['underscore', 'js/synth.js', 'js/soundhelper.js', 'jquery', 'jquery-ui'],
 
-function(_, SkynetSynth, SoundHelper) {
+function(_, SkynetSynth, SoundHelper, $) {
 
   var leap_interface;
   var synth;
@@ -17,11 +17,25 @@ function(_, SkynetSynth, SoundHelper) {
   var Skynetheremin = function(li) {
 
     leap_interface = li;
+
     synth = new SkynetSynth();
 
     leap_interface.setCommandCallback('power', synth.toggleSound);
     leap_interface.addMessageCallback(Skynetheremin.updateSound);
 
+
+    $("#slider-range-max").slider({
+      range: "max",
+      min: -5,
+      max: 5,
+      value: 2,
+      slide: function(event, ui) {
+        $("#amount").text(ui.value);
+        jitter = ui.value;
+      }
+    });
+    $("#amount").text($("#slider-range-max").slider( "value" ));
+  
   };
 
   Skynetheremin.setFrequency = function(value) {
