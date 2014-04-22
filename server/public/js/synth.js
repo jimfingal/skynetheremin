@@ -1,4 +1,4 @@
-define(['js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js'],
+define(['js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js', 'lib/webaudioshim.js'],
        function(SoundHelper, Voice, Scuzz) {
 
     var instance = null;
