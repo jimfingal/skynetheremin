@@ -1,6 +1,8 @@
 define(['js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js'],
        function(SoundHelper, Voice, Scuzz) {
 
+    var instance = null;
+
     var audioContext = new webkitAudioContext();
 
     var effectChain, globalVolume;
@@ -11,7 +13,12 @@ define(['js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js'],
     var offset;
 
     var SkynetSynth = function() {
-         // Create an audio context.
+
+        if (instance !== null) {
+            var error_msg = 'Cannot instantiate more than one SkynetSynth, ' +
+                            'use SkynetSynth.getInstance()';
+            throw new Error(error_msg);
+        }
 
         playing = false;
         offset = SoundHelper.offset(); // What note we're tuned to
@@ -31,7 +38,7 @@ define(['js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js'],
 
     };
 
-    SkynetSynth.prototype.setFrequency = function(value) {
+    var setFrequency = function(value) {
        oscillator.setFrequency(value);
     };
 
@@ -40,7 +47,7 @@ define(['js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js'],
         var scaled = SoundHelper.transposeNoteToPentatonicScale(input_note);
         scaled = scaled + offset;
         var freq = SoundHelper.frequencyFromNote(scaled);
-        this.setFrequency(freq);
+        setFrequency(freq);
     };
 
     SkynetSynth.prototype.setVolume = function(value) {
@@ -50,8 +57,6 @@ define(['js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js'],
     SkynetSynth.prototype.isPlaying = function() {
         return playing;
     };
-
-
 
     var fade = function rFade(node, value, limit, interval, stop_after) {
 
@@ -94,7 +99,13 @@ define(['js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js'],
         return analyzer;
     };
 
-    return SkynetSynth;
+    SkynetSynth.getInstance = function() {
+        if (instance === null) {
+            instance = new SkynetSynth();
+        }
+        return instance;
+    };
 
+    return SkynetSynth.getInstance();
 
 });

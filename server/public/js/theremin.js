@@ -3,9 +3,9 @@ define(['js/synth.js', 'jquery', 'jquery-ui'],
 function(SkynetSynth, $) {
 
   var leap_interface;
-  var synth;
-
   var vertical_bands = 10;
+
+  var synth;
 
   function getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -33,9 +33,9 @@ function(SkynetSynth, $) {
   // Constructor
   var Skynetheremin = function(li) {
 
-    leap_interface = li;
+    synth = SkynetSynth;
 
-    synth = new SkynetSynth();
+    leap_interface = li;
 
     leap_interface.setCommandCallback('power', synth.toggleSound);
     leap_interface.addMessageCallback(Skynetheremin.updateSound);
