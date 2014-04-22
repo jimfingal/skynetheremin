@@ -1,4 +1,4 @@
-define(['jquery'], function($) {
+define(['jquery', 'js/easing.js'], function($, easing) {
 
   // Variables
   var frequencyLabel;
@@ -13,21 +13,24 @@ define(['jquery'], function($) {
   var canvas_2d;
   var freqDomain;
 
-  var bar_color = "#ffffff";
+  var bar_color = '#ffffff';
 
   var bin_count;
   var bin_halved;
+
+  var easing_functions = easing;
 
   var requestAnimationFrame = window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
         window.mozRequestAnimationFrame ||
         window.oRequestAnimationFrame ||
         window.msRequestAnimationFrame;
-        
+
   var cancelAnimationFrame = window.cancelAnimationFrame ||
-        window.webkitCancelRequestAnimationFrame || 
+        window.webkitCancelRequestAnimationFrame ||
         window.webkitCancelAnimationFrame ||
-        window.mozCancelRequestAnimationFrame || window.mozCancelAnimationFrame ||
+        window.mozCancelRequestAnimationFrame ||
+        window.mozCancelAnimationFrame ||
         window.oCancelRequestAnimationFrame || window.oCancelAnimationFrame ||
         window.msCancelRequestAnimationFrame || window.msCancelAnimationFrame;
 
@@ -50,6 +53,8 @@ define(['jquery'], function($) {
         var barWidth = WIDTH / bin_halved;
 
         var alpha = 3 * percent / 4;
+
+        var alpha = easing_functions.easeInQuint(percent, 0, 1, 1);
 
         canvas_2d.fillStyle = 'rgba(204,147,147,' + alpha + ')';
         canvas_2d.fillRect(i * barWidth, offset, barWidth, height);
@@ -76,6 +81,7 @@ define(['jquery'], function($) {
     canvas_2d = canvas.getContext('2d');
 
     animateSpectrum();
+
 
   };
 
