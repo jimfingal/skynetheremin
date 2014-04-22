@@ -3,21 +3,18 @@ define(['js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js'],
 
     var audioContext = new webkitAudioContext();
 
-    var playing;
-
-    var effectChain;
-
-    var globalVolume;
-
+    var effectChain, globalVolume;
     var oscillator;
-
     var analyzer;
 
+    var playing;
+    var offset;
 
     var SkynetSynth = function() {
          // Create an audio context.
 
         playing = false;
+        offset = SoundHelper.offset(); // What note we're tuned to
 
         oscillator = new Scuzz(audioContext);
 
@@ -36,6 +33,14 @@ define(['js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js'],
 
     SkynetSynth.prototype.setFrequency = function(value) {
        oscillator.setFrequency(value);
+    };
+
+    SkynetSynth.prototype.handleInput = function(input_note) {
+
+        var scaled = SoundHelper.transposeNoteToPentatonicScale(input_note);
+        scaled = scaled + offset;
+        var freq = SoundHelper.frequencyFromNote(scaled);
+        this.setFrequency(freq);
     };
 
     SkynetSynth.prototype.setVolume = function(value) {

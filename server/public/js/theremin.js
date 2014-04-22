@@ -1,12 +1,11 @@
-define(['underscore', 'js/synth.js', 'js/soundhelper.js', 'jquery', 'jquery-ui'],
+define(['js/synth.js', 'jquery', 'jquery-ui'],
 
-function(_, SkynetSynth, SoundHelper, $) {
+function(SkynetSynth, $) {
 
   var leap_interface;
   var synth;
 
   var vertical_bands = 10;
-  var offset;
 
   function getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -42,19 +41,13 @@ function(_, SkynetSynth, SoundHelper, $) {
     leap_interface.addMessageCallback(Skynetheremin.updateSound);
 
     setupJitterSlider();
-    offset = SoundHelper.offset();
 
   };
 
   Skynetheremin.setFrequency = function(input_percent) {
     var note = Math.round(input_percent * vertical_bands);
     note = note + jitter;
-    var scaled = SoundHelper.transposeNoteToPentatonicScale(note);
-
-    scaled = scaled + offset;
-    var freq = SoundHelper.frequencyFromNote(scaled);
-    synth.setFrequency(freq);
-
+    synth.handleInput(note);
   };
 
   Skynetheremin.setVolume = function(value, range) {
