@@ -21,28 +21,9 @@ define(['underscore'], function(_) {
     var command_callbacks, message_callbacks;
 
 
-    var LeapInterface = function(s) {
-      socket = s;
-      command_callbacks = {};
-      message_callbacks = [];
-
-      socket.on('send', function(message) {
-        processMessage(message);
-      });
-
-    };
-
-    LeapInterface.prototype.setCommandCallback = function(command, callback) {
-      command_callbacks[command] = callback;
-    };
-
-    LeapInterface.prototype.addMessageCallback = function(callback) {
-      message_callbacks.push(callback);
-    };
-
     var processCommand = function(command) {
-      if (_.has(that.command_callbacks, command)) {
-        var callback = that.command_callbacks[command];
+      if (_.has(command_callbacks, command)) {
+        var callback = command_callbacks[command];
         callback();
       }
     };
@@ -70,7 +51,7 @@ define(['underscore'], function(_) {
       }
     };
 
-    LeapInterface.prototype.processMessage = function(message) {
+    var processMessage = function(message) {
 
       _.each(message.commands, function(command) {
         processCommand(command);
@@ -85,6 +66,25 @@ define(['underscore'], function(_) {
 
       processInputs(inputs);
 
+    };
+
+    var LeapInterface = function(s) {
+      socket = s;
+      command_callbacks = {};
+      message_callbacks = [];
+
+      socket.on('send', function(message) {
+        processMessage(message);
+      });
+
+    };
+
+    LeapInterface.prototype.setCommandCallback = function(command, callback) {
+      command_callbacks[command] = callback;
+    };
+
+    LeapInterface.prototype.addMessageCallback = function(callback) {
+      message_callbacks.push(callback);
     };
 
     return LeapInterface;
