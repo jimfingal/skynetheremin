@@ -1,29 +1,31 @@
-define(['js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js', 'lib/webaudioshim.js'],
-       function(SoundHelper, Voice, Scuzz) {
+define(['js/soundhelper.js',
+       'js/voice.js',
+       'js/scuzzsource.js',
+       'lib/webaudioshim.js'],
+        function(SoundHelper, Voice, Scuzz) {
 
-    var instance = null;
-
-    var audioContext = new webkitAudioContext();
+    var audioContext = (function(Context) {
+        return new Context();
+    })(window.webkitAudioContext || window.AudioContext);
 
     var effectChain, globalVolume;
     var oscillator;
     var analyzer;
 
-    var playing;
-    var offset;
+    var on;
+    var base_note_offset;
+
+    var notes_last_frame;
+    var node_cache;
 
     var SkynetSynth = function() {
 
-        if (instance !== null) {
-            var error_msg = 'Cannot instantiate more than one SkynetSynth, ' +
-                            'use SkynetSynth.getInstance()';
-            throw new Error(error_msg);
-        }
+        on = false;
+        base_note_offset = SoundHelper.offset(); // What note we're tuned to
+        notes_last_frame = [];
+        node_cache = {};
 
-        playing = false;
-        offset = SoundHelper.offset(); // What note we're tuned to
-
-        oscillator = new Scuzz(audioContext);
+        effectChain = audioContext.createGainNode();
 
         globalVolume = audioContext.createGainNode();
         globalVolume.gain.value = 0;
@@ -31,31 +33,62 @@ define(['js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js', 'lib/webaudiosh
         analyzer = audioContext.createAnalyser();
         analyzer.smoothingTimeConstant = .85;
 
-        oscillator.connect(globalVolume);
+        effectChain.connect(globalVolume);
         globalVolume.connect(analyzer);
         analyzer.connect(audioContext.destination);
 
 
     };
 
-    var setFrequency = function(value) {
-       oscillator.setFrequency(value);
+    var getFrequencyFromNote = function(note) {
+        var scaled = SoundHelper.transposeNoteToPentatonicScale(note);
+        scaled = scaled + base_note_offset;
+        var freq = SoundHelper.frequencyFromNote(scaled);
+        return freq;
     };
 
-    SkynetSynth.prototype.handleInput = function(input_note) {
+    var fadeNote = function(note) {
+        var node = node_cache[note];
+        node.rampDown();
+    };
 
-        var scaled = SoundHelper.transposeNoteToPentatonicScale(input_note);
-        scaled = scaled + offset;
-        var freq = SoundHelper.frequencyFromNote(scaled);
-        setFrequency(freq);
+    var setUpNode = function(note) {
+        var oscillator_node = new Scuzz(audioContext);
+        var freq = getFrequencyFromNote(note);
+        oscillator_node.setFrequency(freq);
+        oscillator_node.connect(effectChain);
+        return oscillator_node;
+    };
+
+    var playNote = function(note) {
+
+        if (!_.has(node_cache, note)) {
+            var node = setUpNode(note);
+            node_cache[note] = node;
+        }
+
+        node_cache[note].rampUp();
+
+    };
+
+    SkynetSynth.prototype.handleInputs = function(notes) {
+
+        var no_longer_playing = _.difference(notes_last_frame, notes);
+        var new_notes = _.difference(notes, notes_last_frame);
+
+        _.map(no_longer_playing, fadeNote);
+        _.map(new_notes, playNote);
+
+        notes_last_frame = _.clone(notes);
+
     };
 
     SkynetSynth.prototype.setVolume = function(value) {
        globalVolume.gain.value = value;
     };
 
-    SkynetSynth.prototype.isPlaying = function() {
-        return playing;
+    SkynetSynth.prototype.isOn = function() {
+        return on;
     };
 
     var fade = function rFade(node, value, limit, interval, stop_after) {
@@ -78,20 +111,20 @@ define(['js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js', 'lib/webaudiosh
         }
     };
 
-    var playSound = function() {
-        playing = true;
+    var turnOn = function() {
+        on = true;
     };
 
-    var stopSound = function() {
-        playing = false;
+    var turnOff = function() {
+        on = false;
         fade(globalVolume, -0.3, 0, 0.1, true);
     };
 
-    SkynetSynth.prototype.toggleSound = function() {
-        if (playing) {
-          stopSound();
+    SkynetSynth.prototype.togglePower = function() {
+        if (on) {
+          turnOff();
         } else {
-          playSound();
+          turnOn();
         }
     };
 
@@ -99,13 +132,8 @@ define(['js/soundhelper.js', 'js/voice.js', 'js/scuzzsource.js', 'lib/webaudiosh
         return analyzer;
     };
 
-    SkynetSynth.getInstance = function() {
-        if (instance === null) {
-            instance = new SkynetSynth();
-        }
-        return instance;
-    };
+    var instance = new SkynetSynth();
 
-    return SkynetSynth.getInstance();
+    return instance;
 
 });

@@ -17,17 +17,34 @@ define(['underscore'], function(_) {
       }
     };
 
+    var socket;
+    var command_callbacks, message_callbacks;
+
+
     var LeapInterface = function(s) {
-      this.socket = s;
-      this.command_callbacks = {};
-      this.message_callbacks = [];
+      socket = s;
+      command_callbacks = {};
+      message_callbacks = [];
 
-      var that = this;
-
-      this.socket.on('send', function(message) {
-        that.processMessage(message);
+      socket.on('send', function(message) {
+        processMessage(message);
       });
 
+    };
+
+    LeapInterface.prototype.setCommandCallback = function(command, callback) {
+      command_callbacks[command] = callback;
+    };
+
+    LeapInterface.prototype.addMessageCallback = function(callback) {
+      message_callbacks.push(callback);
+    };
+
+    var processCommand = function(command) {
+      if (_.has(that.command_callbacks, command)) {
+        var callback = that.command_callbacks[command];
+        callback();
+      }
     };
 
     var getInputInPercentages = function(input) {
@@ -44,44 +61,30 @@ define(['underscore'], function(_) {
 
     };
 
-    LeapInterface.prototype.setCommandCallback = function(command, callback) {
-      this.command_callbacks[command] = callback;
-    };
 
-    LeapInterface.prototype.addMessageCallback = function(callback) {
-      this.message_callbacks.push(callback);
+    var processInputs = function(inputs) {
+      if (inputs.length > 0) {
+        _.each(message_callbacks, function(callback) {
+          callback(inputs);
+        });
+      }
     };
 
     LeapInterface.prototype.processMessage = function(message) {
 
-      var that = this;
+      _.each(message.commands, function(command) {
+        processCommand(command);
+      });
 
-      if (message.commands && message.commands.length) {
+      var inputs = [];
 
-        _.each(message.commands, function(command) {
+      _.each(message.inputs, function(input) {
+        var percentages = getInputInPercentages(input);
+        inputs.push(percentages);
+      });
 
-          if (_.has(that.command_callbacks, command)) {
+      processInputs(inputs);
 
-            var callback = that.command_callbacks[command];
-            callback();
-          
-          }
-
-        });
-      }
-
-      if (message.inputs.length > 0) {
-
-        _.each(message.inputs, function(input) {
-
-          var percentages = getInputInPercentages(input);
-
-          _.each(that.message_callbacks, function(callback) {
-            callback(percentages);
-          });
-
-        });
-      }
     };
 
     return LeapInterface;
