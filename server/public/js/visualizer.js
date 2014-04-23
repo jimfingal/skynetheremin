@@ -1,48 +1,19 @@
-define(['jquery', 'js/easing.js'], function($, easing) {
-
-  // Variables
-  var frequencyLabel;
-  var volumeLabel;
-
-  var analyzer_node;
-
-  var WIDTH = 1200;
-  var HEIGHT = 500;
-
-  var canvas;
-  var canvas_2d;
-  var freqDomain;
-
-  var bar_color = '#ffffff';
-
-  var bin_count;
-  var bin_halved;
+define(['js/easing.js', 'lib/animationshim.js'], function(easing) {
 
   var easing_functions = easing;
+  var analyzer_node;
 
-  var requestAnimationFrame = window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.oRequestAnimationFrame ||
-        window.msRequestAnimationFrame;
-
-  var cancelAnimationFrame = window.cancelAnimationFrame ||
-        window.webkitCancelRequestAnimationFrame ||
-        window.webkitCancelAnimationFrame ||
-        window.mozCancelRequestAnimationFrame ||
-        window.mozCancelAnimationFrame ||
-        window.oCancelRequestAnimationFrame || window.oCancelAnimationFrame ||
-        window.msCancelRequestAnimationFrame || window.msCancelAnimationFrame;
+  var WIDTH = 1200, HEIGHT = 500;
+  var canvas, canvas_2d;
+  var freqDomain;
+  var bin_count, bin_halved;
 
  var drawSpectrum = function() {
 
       canvas_2d.clearRect(0, 0, WIDTH, HEIGHT);
 
-
       freqDomain = new Uint8Array(bin_count);
       analyzer_node.getByteFrequencyData(freqDomain);
-
-
 
       for (var i = 0; i < bin_halved; i++) {
         var value = freqDomain[i];
@@ -63,7 +34,7 @@ define(['jquery', 'js/easing.js'], function($, easing) {
   };
 
   var animateSpectrum = function reAnimate() {
-      requestAnimationFrame(reAnimate);
+      window.requestAnimationFrame(reAnimate);
       drawSpectrum();
   };
 
@@ -74,14 +45,10 @@ define(['jquery', 'js/easing.js'], function($, easing) {
     bin_count = analyzer_node.frequencyBinCount;
     bin_halved = bin_count / 2;
 
-    frequencyLabel = document.getElementById('frequency');
-    volumeLabel = document.getElementById('volume');
-
     canvas = document.querySelector('canvas');
     canvas_2d = canvas.getContext('2d');
 
     animateSpectrum();
-
 
   };
 
