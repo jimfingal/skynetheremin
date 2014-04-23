@@ -20,6 +20,7 @@ function(_, SkynetSynth, UserInput, $) {
     leap_interface.setCommandCallback('power', synth.togglePower);
     leap_interface.addMessageCallback(Skynetheremin.updateSound);
 
+    // Comment out to disable debug mouse;
     user_input.setMouseCallback(function(x, y) {
       if (!synth.isOn()) {
         synth.togglePower();
