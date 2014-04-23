@@ -1,6 +1,5 @@
 define(['Tuna', 'js/envelope.js'], function(Tuna, Envelope) {
 
-
   var ScuzzSource = function(context, frequency, type) {
 
     // Private
@@ -77,7 +76,6 @@ define(['Tuna', 'js/envelope.js'], function(Tuna, Envelope) {
       scuzzOscillator.start(0);
       oscillator.start(0);
 
-
       var newObject = {};
 
       newObject.connect = function(destination) {
@@ -88,19 +86,24 @@ define(['Tuna', 'js/envelope.js'], function(Tuna, Envelope) {
         return finalVolume;
       };
 
-
       newObject.setFrequency = function(freq) {
 
         if (freq != currentFreq) {
           oscillator.frequency.setValueAtTime(freq, 0);
-          envelope.rampUp();
           currentFreq = freq;
         }
       };
 
+      newObject.rampUp = function() {
+        envelope.rampUp();
+      };
+
+      newObject.rampDown = function() {
+        envelope.rampDown();
+      };
+
       return newObject;
   };
-
 
 
   return ScuzzSource;

@@ -46,6 +46,7 @@ define(function() {
       var now = this.context.currentTime;
       var attack_end = now + this.attack;
 
+      this.envelope.gain.cancelScheduledValues(now);
       this.envelope.gain.setValueAtTime(0.0, now);
       this.envelope.gain.linearRampToValueAtTime(1.0, attack_end);
       this.envelope.gain.setTargetAtTime(this.sustain,
@@ -62,7 +63,7 @@ define(function() {
         this.envelope.gain.cancelScheduledValues(now);
         // this is necessary because of the linear ramp
         this.envelope.gain.setValueAtTime(this.envelope.gain.value, now);
-        this.envelope.gain.setTargetValueAtTime(0.0, now, this.release);
+        this.envelope.gain.setTargetAtTime(0.0, now, this.release);
 
     };
 
