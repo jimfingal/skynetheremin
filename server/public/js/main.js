@@ -3,8 +3,8 @@ requirejs.config({
     'paths': {
       'js' : '../js',
       'lib' : '../lib',
-      'jquery': 'http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min',
-      'jquery-ui': 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min',
+      'jquery': 'jquery/dist/jquery.min',
+      'jquery-ui': 'jquery-ui/ui/jquery-ui',
       'Tuna' : '../lib/tuna',
       'underscore' : 'underscore/underscore'
     },
