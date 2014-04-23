@@ -3,9 +3,9 @@
  * Module dependencies.
  */
 
-var express = require('express'), 
-  http = require('http'), 
-  path = require('path'), 
+var express = require('express'),
+  http = require('http'),
+  path = require('path'),
   io = require('socket.io');
 
 var getSocket = function(app) {

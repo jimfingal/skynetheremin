@@ -16,6 +16,7 @@ function(SkynetSynth, $) {
 
   var setupJitterSlider = function() {
 
+    // TODO: Knobs? http://anthonyterrien.com/knob/
     $('#jitter').slider({
       min: -50,
       max: 50,
