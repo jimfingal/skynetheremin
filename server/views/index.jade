@@ -1,11 +1,17 @@
-extends layout
+doctype 5
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/css/style.css')
+    link(rel='stylesheet', href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css')
+    script(data-main="js/main.js", src="bower_components/requirejs/require.js")
 
-block content
-  div
-    h1 Web Audio Synth
-    canvas#visualizer
-  div
-    p
-      label Jitter amount:
-      span#amount
-      div#jitter.slider
+  body
+    div
+      h1 Web Audio Synth
+      canvas#visualizer
+    div
+      p
+        label Jitter amount:
+        span#amount
+        div#jitter.slider
