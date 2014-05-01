@@ -13,7 +13,7 @@ define(function() {
     return DEFAULT_NOTE - BASE_NOTE;
   };
 
-  var helper = {
+  var musictheory = {
 
     frequencyFromNote: function(n) {
       return Math.pow(2, n / 12) * BASE_FREQUENCY;
@@ -54,6 +54,6 @@ define(function() {
     }
   };
 
-  return helper;
+  return musictheory;
 
 });

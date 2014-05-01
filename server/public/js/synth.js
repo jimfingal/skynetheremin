@@ -1,7 +1,8 @@
-define(['js/soundhelper.js',
+define(['js/theory.js',
        'js/scuzzsource.js',
+       'js/audionodes.js',
        'lib/webaudioshim.js'],
-        function(SoundHelper, Scuzz) {
+        function(musictheory, Scuzz, audionodes) {
 
     var audioContext = (function(Context) {
         return new Context();
@@ -10,6 +11,7 @@ define(['js/soundhelper.js',
     var effectChain, globalVolume;
     var oscillator;
     var analyzer;
+    var envelope;
 
     var on;
 
@@ -27,19 +29,22 @@ define(['js/soundhelper.js',
         globalVolume = audioContext.createGainNode();
         globalVolume.gain.value = 0;
 
+        envelope = new audionodes.Envelope(audioContext, 0.2, 0.9, 0.9, 0.1);
+
         analyzer = audioContext.createAnalyser();
         analyzer.smoothingTimeConstant = .85;
 
         effectChain.connect(globalVolume);
-        globalVolume.connect(analyzer);
+        globalVolume.connect(envelope.input);
+        envelope.connect(analyzer);
         analyzer.connect(audioContext.destination);
 
 
     };
 
     var getFrequencyFromNote = function(note) {
-        var scaled = SoundHelper.transposeNoteToPentatonicScale(note);
-        var freq = SoundHelper.frequencyFromNote(scaled);
+        var scaled = musictheory.transposeNoteToPentatonicScale(note);
+        var freq = musictheory.frequencyFromNote(scaled);
         return freq;
     };
 
@@ -86,33 +91,14 @@ define(['js/soundhelper.js',
         return on;
     };
 
-    var fade = function rFade(node, value, limit, interval, stop_after) {
-
-        node.gain.value += value;
-        if (value < 0 && node.gain.value > limit) {
-
-          setTimeout(function() {
-            rFade(node, value, limit, interval, stop_after);
-          }, interval);
-
-        } else if (value > 0 && node.gain.value < limit) {
-
-          setTimeout(function() {
-            rFade(node, value, limit, interval, stop_after);
-          }, interval);
-
-        } else if (stop_after) {
-          node.gain.value = 0;
-        }
-    };
-
     var turnOn = function() {
         on = true;
+        envelope.rampUp();
     };
 
     var turnOff = function() {
         on = false;
-        fade(globalVolume, -0.3, 0, 0.1, true);
+        envelope.rampDown();
     };
 
     SkynetSynth.prototype.togglePower = function() {
