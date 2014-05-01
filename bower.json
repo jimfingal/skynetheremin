@@ -10,6 +10,8 @@
   "dependencies": {
     "underscore": "latest",
     "socket.io": "latest",
-    "requirejs": "latest"
+    "requirejs": "latest",
+    "jquery": "latest",
+    "jquery-ui": "latest"
   }
 }
