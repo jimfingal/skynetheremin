@@ -1,8 +1,7 @@
 define(['js/theory.js',
-       'js/scuzzsource.js',
        'js/audionodes.js',
        'lib/webaudioshim.js'],
-        function(musictheory, Scuzz, audionodes) {
+        function(musictheory, audionodes) {
 
     var audioContext = (function(Context) {
         return new Context();
@@ -55,7 +54,7 @@ define(['js/theory.js',
 
     var setUpNode = function(note) {
         var freq = getFrequencyFromNote(note);
-        var oscillator_node = new Scuzz(audioContext, freq);
+        var oscillator_node = new audionodes.ScuzzSource(audioContext, freq);
         oscillator_node.connect(effectChain);
         return oscillator_node;
     };
