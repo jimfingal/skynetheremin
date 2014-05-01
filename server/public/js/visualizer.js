@@ -12,7 +12,7 @@ define(['js/easing.js', 'lib/animationshim.js'], function(easing) {
 
       var c1 = 205, c2 = 147, c3 = 176;
       var colors = [];
-      
+
       colors.push([c1, c2, c2]);
       colors.push([c1, c2, c3]);
       colors.push([c1, c2, c1]);
@@ -30,7 +30,7 @@ define(['js/easing.js', 'lib/animationshim.js'], function(easing) {
   };
 
   var getFillStyle = function(percent) {
-    
+
     var alpha = easing_functions.easeOutCubic(percent, 0, 1, 1);
     var index = Math.floor(easing_functions.easeInCubic(percent, 0, 1, 1) * 10);
     var color_set = colors[index];
@@ -38,7 +38,7 @@ define(['js/easing.js', 'lib/animationshim.js'], function(easing) {
 
     var fill = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
     return fill;
-  }
+  };
 
   var drawSpectrum = function() {
 

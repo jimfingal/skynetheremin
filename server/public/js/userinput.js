@@ -42,7 +42,7 @@ define(['jquery', 'jquery-ui'], function($) {
   };
 
   var UserInput = function() {
-    setupJitterSlider();
+    //setupJitterSlider();
     setupMouseInput();
   };
 
