@@ -4,8 +4,8 @@ define(['jquery', 'jquery-ui'], function($) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  var jitter = getRandomInt(-3, 3);
-  //var jitter = 0;
+  //var jitter = getRandomInt(-3, 3);
+  var jitter = 0;
   var mouseCallback;
 
   var setupJitterSlider = function() {

@@ -9,11 +9,11 @@ define(function() {
 
   var DEFAULT_NOTE = 52;
 
-  var helper = {
+  var offset = function() {
+    return DEFAULT_NOTE - BASE_NOTE;
+  };
 
-    offset: function() {
-      return DEFAULT_NOTE - BASE_NOTE;
-    },
+  var helper = {
 
     frequencyFromNote: function(n) {
       return Math.pow(2, n / 12) * BASE_FREQUENCY;
@@ -42,11 +42,11 @@ define(function() {
     },
 
     transposeNoteToPentatonicScale: function(n) {
-      return this.transposeNoteToScale(n, pentatonic);
+      return this.transposeNoteToScale(n, pentatonic) + offset();
     },
 
     transposeNoteToMinorScale: function(n) {
-      return this.transposeNoteToScale(n, perfect_minor);
+      return this.transposeNoteToScale(n, perfect_minor) + offset();
     },
 
     fifthFromFrequency: function(freq) {

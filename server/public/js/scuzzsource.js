@@ -1,108 +1,36 @@
-define(['Tuna', 'js/envelope.js'], function(Tuna, Envelope) {
-
-  var ScuzzSource = function(context, frequency, type) {
-
-    // Private
-      var oscillator, scuzzOscillator, finalOutput;
-      var oscVolume, scuzzVolume, finalVolume;
-      var filter, delay, feedback, compressor;
-      var tuna;
-
-      var envelope;
-      var currentFreq;
-
-      tuna = new Tuna(context);
-
-      finalVolume = context.createGainNode();
-      finalOutput = context.createGainNode();
-
-      oscillator = context.createOscillator();
-      oscillator.type = 'sine';
-      oscVolume = context.createGainNode();
-      oscVolume.gain.value = 0.5;
+define(['js/audionodes.js'], function(audionodes) {
 
 
-      scuzzOscillator = context.createOscillator();
-      scuzzOscillator.frequency.value = 400;
-      scuzzOscillator.type = 'sine';
-      scuzz = context.createGainNode();
-      scuzz.gain.value = 147;
+  var ScuzzSource = function(context, frequency) {
 
-      compressor = context.createDynamicsCompressor();
+    var volume = context.createGainNode();
+    var output = context.createGainNode();
 
-      envelope = new Envelope(context, 1.5, 0.5, 0.5, 1);
-      /*
-      filter = context.createBiquadFilter();
-      filter.type = 'lowpass';
-      */
+    var scuzz_oscillator = new audionodes.ScuzzOscillator(context, frequency);
+    var envelope = new audionodes.Envelope(context, 1.5, 0.5, 0.5, 1);
+    var delay = new audionodes.Delay(context);
 
-      /*
+    scuzz_oscillator.connect(envelope.input);
+    envelope.connect(delay.input);
+    delay.connect(volume);
+    volume.connect(output);
 
-      delay = context.createDelayNode();
-      delay.delayTime.value = 190;
+    this.connect = function(target) {
+      output.connect(target);
+    };
 
-      feedbackGain = context.createGainNode();
-      feedbackGain.gain.value = 10;
-      */
-      delay = new tuna.Delay({
-                feedback: 0.45,    //0 to 1+
-                delayTime: 190,    //how many milliseconds should the wet signal be delayed? 
-                wetLevel: 0.75,    //0 to 1+
-                dryLevel: 0.9,       //0 to 1+
-                cutoff: 20,        //cutoff frequency of the built in highpass-filter. 20 to 22050
-                bypass: 0
-            });
+    this.volumeNode = function() {
+      return volume;
+    };
 
+    this.rampUp = function() {
+      envelope.rampUp();
+    };
 
-      scuzzOscillator.connect(scuzz);
-      scuzz.connect(oscillator.detune);
+    this.rampDown = function() {
+      envelope.rampDown();
+    };
 
-      oscillator.connect(oscVolume);
-
-      envelope.connect(oscVolume, delay.input);
-
-      // oscVolume.connect(delay.input);
-
-      /*
-      filter.connect(compressor);
-      filter.connect(delay);
-      */
-
-      delay.connect(compressor);
-
-      compressor.connect(finalVolume);
-      finalVolume.connect(finalOutput);
-
-      scuzzOscillator.start(0);
-      oscillator.start(0);
-
-      var newObject = {};
-
-      newObject.connect = function(destination) {
-        finalOutput.connect(destination);
-      };
-
-      newObject.volumeNode = function() {
-        return finalVolume;
-      };
-
-      newObject.setFrequency = function(freq) {
-
-        if (freq != currentFreq) {
-          oscillator.frequency.setValueAtTime(freq, 0);
-          currentFreq = freq;
-        }
-      };
-
-      newObject.rampUp = function() {
-        envelope.rampUp();
-      };
-
-      newObject.rampDown = function() {
-        envelope.rampDown();
-      };
-
-      return newObject;
   };
 
 

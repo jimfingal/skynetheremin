@@ -1,8 +1,8 @@
 define(function() {
-
+    "use strict"
     // time, begin, change, duration
 
-    easing_functions = {
+    var easing_functions = {
 
         linear: function(t, b, c, d) {
             return c * t / d + b;

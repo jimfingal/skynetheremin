@@ -1,8 +1,7 @@
 define(['js/soundhelper.js',
-       'js/voice.js',
        'js/scuzzsource.js',
        'lib/webaudioshim.js'],
-        function(SoundHelper, Voice, Scuzz) {
+        function(SoundHelper, Scuzz) {
 
     var audioContext = (function(Context) {
         return new Context();
@@ -13,7 +12,6 @@ define(['js/soundhelper.js',
     var analyzer;
 
     var on;
-    var base_note_offset;
 
     var notes_last_frame;
     var node_cache;
@@ -21,7 +19,6 @@ define(['js/soundhelper.js',
     var SkynetSynth = function() {
 
         on = false;
-        base_note_offset = SoundHelper.offset(); // What note we're tuned to
         notes_last_frame = [];
         node_cache = {};
 
@@ -42,7 +39,6 @@ define(['js/soundhelper.js',
 
     var getFrequencyFromNote = function(note) {
         var scaled = SoundHelper.transposeNoteToPentatonicScale(note);
-        scaled = scaled + base_note_offset;
         var freq = SoundHelper.frequencyFromNote(scaled);
         return freq;
     };
@@ -53,9 +49,8 @@ define(['js/soundhelper.js',
     };
 
     var setUpNode = function(note) {
-        var oscillator_node = new Scuzz(audioContext);
         var freq = getFrequencyFromNote(note);
-        oscillator_node.setFrequency(freq);
+        var oscillator_node = new Scuzz(audioContext, freq);
         oscillator_node.connect(effectChain);
         return oscillator_node;
     };

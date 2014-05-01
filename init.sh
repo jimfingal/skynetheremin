@@ -18,6 +18,7 @@ su - node
 git clone https://github.com/jimmytheleaf/skynetheramin.git
 cd skynetheramin
 npm install
+bower install
 exit
 
 # nginx
