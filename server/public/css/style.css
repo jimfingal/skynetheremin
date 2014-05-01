@@ -5,17 +5,12 @@ html {
 }
 
 body {
-  padding: 50px;
-  background-color: #3f3f3f;
+  background-color: #333333;
   color: #dcdccc;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 #visualizer {
-    float: left;
-    width: 1250px;
-    height: 550px;
-    /* border-radius: 5px; */
     background: #333333;
 }
 
