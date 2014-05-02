@@ -31,12 +31,27 @@ function(_, mixer, SkynetSynth, UserInput, $) {
     leap_interface.setCommandCallback('power', skynet_synth.togglePower);
     leap_interface.addMessageCallback(Skynetheremin.updateSound);
 
+    var mouseSound = function(x, y) {
+      // Opposite of LEAP: pitch up as X goes up; volume up as Y goes up
+      Skynetheremin.updateSound([{'x': y / window.innerHeight, 'y': x / window.innerWidth}], USER);
+    };
+
     // Comment out to disable debug mouse;
-    user_input.setMouseCallback(function(x, y) {
+    user_input.setMousedown(function(x, y) {
       if (!user_synth.isOn()) {
         user_synth.togglePower();
       }
-      Skynetheremin.updateSound([{'x': x / 200, 'y': y / 500}], USER);
+      mouseSound(x, y);
+    });
+
+    user_input.setMousemove(function(x, y) {
+      mouseSound(x, y);
+    });
+
+    user_input.setMouseup(function(x, y) {
+      if (user_synth.isOn()) {
+        user_synth.togglePower();
+      }
     });
 
   };

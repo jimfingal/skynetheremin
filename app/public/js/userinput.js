@@ -6,7 +6,9 @@ define(['jquery', 'jquery-ui'], function($) {
 
   //var jitter = getRandomInt(-3, 3);
   var jitter = 0;
-  var mouseCallback;
+  var mousedownCallback;
+  var mouseupCallback;
+  var mousemoveCallback;
 
   var setupJitterSlider = function() {
 
@@ -28,17 +30,32 @@ define(['jquery', 'jquery-ui'], function($) {
 
   };
 
-  var handleMouseInput = function(touch) {
-    if (mouseCallback) {
+  var handleCallback = function(callback, touch) {
+    if (callback) {
       var x = touch.pageX - canvas.offsetLeft;
       var y = touch.pageY - canvas.offsetTop;
-      mouseCallback(x, y);
+      callback(x, y);
     }
+  };
+
+  var handleMousedown = function(touch) {
+    handleCallback(mousedownCallback, touch);
+  };
+
+  var handleMouseup = function(touch) {
+    handleCallback(mouseupCallback, touch);
+  };
+
+  var handleMousemove = function(touch) {
+    handleCallback(mousemoveCallback, touch);
   };
 
   var setupMouseInput = function() {
     canvas = document.querySelector('#visualizer');
-    canvas.addEventListener('mousedown', handleMouseInput);
+    canvas.addEventListener('mousedown', handleMousedown);
+    canvas.addEventListener('mouseup', handleMouseup);
+    canvas.addEventListener('mousemove', handleMousemove);
+
   };
 
   var UserInput = function() {
@@ -46,10 +63,17 @@ define(['jquery', 'jquery-ui'], function($) {
     setupMouseInput();
   };
 
-  UserInput.prototype.setMouseCallback = function(func) {
-    return mouseCallback = func;
+  UserInput.prototype.setMousedown = function(func) {
+    return mousedownCallback = func;
   };
 
+  UserInput.prototype.setMouseup = function(func) {
+    return mouseupCallback = func;
+  };
+
+  UserInput.prototype.setMousemove = function(func) {
+    return mousemoveCallback = func;
+  };
 
   UserInput.prototype.jitterAmount = function() {
     return jitter;
