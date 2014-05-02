@@ -73,7 +73,7 @@ define(['underscore'], function(_) {
       command_callbacks = {};
       message_callbacks = [];
 
-      socket.on('send', function(message) {
+      socket.on('receive', function(message) {
         processMessage(message);
       });
 
