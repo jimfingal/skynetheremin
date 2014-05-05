@@ -19,7 +19,6 @@ app.configure () ->
 app.get '/', (req, res) ->
   res.render 'index', title: 'Synth'
 
-
 server = http.createServer app
 serverio = io.listen(server).set('log level', 2)
 server.listen app.get('port')
