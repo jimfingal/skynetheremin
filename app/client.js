@@ -1,3 +1,5 @@
+'use strict';
+
 var target = process.argv[2];
 
 if (target === undefined) {
@@ -9,36 +11,103 @@ var Cylon = require('cylon');
 var _ = require('underscore');
 var io = require('socket.io-client');
 var socket = io.connect(target);
+var keypress = require('keypress');
 
-var message = {
-  'inputs' : [],
-  'commands' : []
+var MessageHandler = function() {
+
+  var message = {
+    'inputs' : [],
+    'commands' : []
+  };
+
+  var frame_keypresses = {};
+
+  var resetMessage = function(message) {
+    message.inputs.length = 0;
+    message.commands.length = 0;
+  };
+
+  var resetKeypresses = function() {
+    _.forEach(_.keys(frame_keypresses), function(key) {
+      delete frame_keypresses[key];
+    });
+  };
+
+  var setupKeyboardInput = function() {
+    keypress(process.stdin);
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
+
+    process.stdin.on('keypress', function(ch, key) {
+      Logger.debug('got "keypress"', key);
+      if (key && key.ctrl && key.name == 'c') {
+        process.kill();
+      } else {
+        frame_keypresses[key.name] = true;
+      }
+    });
+
+  };
+
+  this.messageFromFrame = function(frame) {
+
+    resetMessage(message);
+
+    _.forEach(frame.hands, function(hand) {
+      message.inputs.push({ x: hand.palmX, y: hand.palmY, z: hand.palmZ });
+    });
+
+    _.forEach(frame.gestures, function(gesture) {
+
+      /*
+      if (gesture.type === 'keyTap') {
+         message.commands.push('power');
+      }
+      */
+
+    });
+
+    if ('space' in frame_keypresses) {
+      message.commands.push('power');
+    }
+
+    resetKeypresses();
+
+    return message;
+  };
+
+  setupKeyboardInput();
+
 };
 
-function resetMessage(message) {
-  message.inputs.length = 0;
-  message.commands.length = 0;
-}
+var handler = new MessageHandler();
 
-function messageFromFrame(frame) {
-
-  resetMessage(message);
-
-  _.forEach(frame.hands, function(hand) {
-    message.inputs.push({ x: hand.palmX, y: hand.palmY, z: hand.palmZ });
+var process_frame = function(my) {
+  
+  my.leapmotion.on('connect', function() {
+    Logger.info('Connected');
   });
 
-  _.forEach(frame.gestures, function(gesture) {
+  my.leapmotion.on('start', function() {
+    Logger.info('Started');
+  });
 
-    if (gesture.type === 'keyTap') {
-       message.commands.push('power');
+  my.leapmotion.on('frame', function(frame) {
+
+    var message = handler.messageFromFrame(frame);
+
+    if (message.commands.length || message.inputs.length) {
+      Logger.debug(message);
     }
+
+    socket.emit('send', message);
+
   });
 
-  return message;
-}
+};
 
-Cylon.robot({
+var robot_settings = {
+
   connection: {
     name: 'leapmotion',
     adaptor: 'leapmotion',
@@ -50,26 +119,8 @@ Cylon.robot({
     driver: 'leapmotion'
   },
 
-  work: function(my) {
-    my.leapmotion.on('connect', function() {
-      Logger.info('Connected');
-    });
+  work: process_frame
+};
 
-    my.leapmotion.on('start', function() {
-      Logger.info('Started');
-    });
 
-    my.leapmotion.on('frame', function(frame) {
-
-      var message = messageFromFrame(frame);
-
-      if (message.commands.length || message.inputs.length) {
-        console.log(message);
-      }
-
-      socket.emit('send', message);
-
-    });
-
-  }
-}).start();
+Cylon.robot(robot_settings).start();
