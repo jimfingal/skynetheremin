@@ -66,8 +66,8 @@ process_frame = (my) ->
   my.leapmotion.on 'frame', (frame) ->
     message = handler.messageFromFrame frame
 
-    if message.commands.length or message.inputs.length
-      Logger.debug message
+    #if message.commands.length or message.inputs.length
+    #  Logger.debug message
 
     socket.emit 'send', message
 
