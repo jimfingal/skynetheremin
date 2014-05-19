@@ -56,7 +56,7 @@ The web client so far works well on Chrome and works (???) on Firefox and Safari
 
 The sound is synthesized using Web Audio.
 
-The basic UI was inspired by the Theramin by [Femur Designs](http://www.femurdesign.com/theremin/).
+The basic UI was inspired by (and/or reverse-engineered from) the Theremin by [Femur Designs](http://www.femurdesign.com/theremin/).
 
 
 
