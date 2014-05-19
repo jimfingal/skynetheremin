@@ -47,3 +47,16 @@ Ex:
 Press spacebar to start and stop broadcasting.
 
 ### Web Client
+
+The web client so far works well on Chrome and works (???) on Firefox and Safari. The main features are:
+
+* Accepts mouse dragging inputs from the user to create sound
+* Renders sound into a pleasant-looking visualization
+* Establishes a connection to the remote server to receive instructions from the broadcaster
+
+The sound is synthesized using Web Audio.
+
+The basic UI was inspired by the Theramin by [Femur Designs](http://www.femurdesign.com/theremin/).
+
+
+
