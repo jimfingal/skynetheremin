@@ -1,4 +1,49 @@
 skynetheremin
 =============
 
-Like a theremin, but with skynet
+A distributed theremin, powered by a Leap Motion controller, a user-interface device that tracks the user's hand motions.
+
+![Screenshot](screenshot.png)
+
+## Demo App Usage
+
+Using Chrome, go to: http://skynetheremin.herokuapp.com/
+
+Click and drag on the screen to make your own music.
+
+During a demonstration, you should also hear music coming from the sky.
+
+
+## Tech Notes
+
+To install all libraries for this app, pull the code and run:
+
+    npm install
+
+The post-install hooks should also grab the bower libraries.
+
+There are three major backend components: the server, the broadcaster, and the web client.
+
+### Server
+
+The server is a lightweight express app written in node. Basically all it does is handle websockets between the web clients, and re-broadcasts information from the broadcaster to each web client.
+
+To run the server:
+
+    node app/server.js
+
+### Broadcaster
+
+The broadcaster handles reading information from the Leap Motion, and sending that information to the server. It makes use of [Cylon.js](https://github.com/hybridgroup/cylon-leapmotion) to 
+
+To run the broadcaster:
+
+    node app/client.js [target]
+
+Ex:
+
+    node app/client.js http://skynetheremin.herokuapp.com/
+
+Press spacebar to start and stop broadcasting.
+
+### Web Client
