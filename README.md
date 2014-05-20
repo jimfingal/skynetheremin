@@ -65,3 +65,8 @@ This node app is set up to deploy to heroku. To do so, websockets must be enable
 
 * https://devcenter.heroku.com/articles/getting-started-with-nodejs
 * https://devcenter.heroku.com/articles/node-websockets
+
+In addition, the buildpack should be set to the node.js pack:
+
+    heroku config:add BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-nodejs
+
