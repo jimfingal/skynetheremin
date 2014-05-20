@@ -22,7 +22,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "node_modules/.bin/bower install && wget http://requirejs.org/docs/release/2.1.11/r.js && node r.js -o requirebuild.js"
+    "postinstall": "node_modules/.bin/bower install && node node_modules/.bin/r.js -o requirebuild.js"
   },
   "repository": {
     "type": "git",
