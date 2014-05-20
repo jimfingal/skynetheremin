@@ -22,7 +22,7 @@ To install all libraries for this app, pull the code and run:
 
 The post-install hooks should also grab the bower libraries.
 
-There are three major backend components: the server, the broadcaster, and the web client.
+There are three major components: the server, the broadcaster, and the web client.
 
 ### Server
 
