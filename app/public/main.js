@@ -5,6 +5,7 @@ requirejs.config({
       'lib' : '../lib',
       'jquery': 'jquery/dist/jquery.min',
       'jquery-ui': 'jquery-ui/ui/jquery-ui',
+      'bootstrap': 'bootstrap/dist/js/bootstrap.min',
       'Tuna' : '../lib/tuna',
       'underscore' : 'underscore/underscore'
     },
@@ -14,6 +15,9 @@ requirejs.config({
         },
         'jquery-ui': {
             deps: ['jquery']
+        },
+        'bootstrap': {
+          deps: ['jquery']
         }
     }
 });
@@ -21,12 +25,16 @@ requirejs.config({
 requirejs(['socket.io/socket.io.js',
           'js/theremin.js',
           'js/visualizer.js',
-          'js/leapinterface'],
+          'js/leapinterface',
+          'lib/pace.min',
+          'bootstrap',],
   function(io,
            Skynetheremin,
            SkynetVisualizer,
-           LeapInterface) {
+           LeapInterface,
+           pace) {
 
+    pace.start();
     var loc = window.location;
     var url = location.protocol + '//' + location.hostname + ':' + location.port;
     var socket = io.connect(url);

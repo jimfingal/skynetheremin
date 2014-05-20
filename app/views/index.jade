@@ -3,8 +3,23 @@ html
   head
     title= title
     link(rel='stylesheet', href='/css/style.css')
-    link(rel='stylesheet', href='/bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css')
+    link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.min.css')
     script(data-main="main.js", src="/bower_components/requirejs/require.js")
 
   body
     canvas#visualizer
+    button#help.btn(data-toggle="modal", data-target="#myModal") ?
+    div#myModal.modal(role=dialog)
+      div.modal-dialog
+        div.modal-content
+          div.modal-header
+            button.close(type="button", class="close", data-dismiss="modal", aria-hidden="true") &times;
+            h4 About the Skynetheremin
+          div.modal-body
+            p Click and drag your mouse across the screen to make sound. If the robots are making music in the cloud, it will be broadcast to your browser.
+            span Created by 
+              a(href="http://jimfingal.com", target="_blank") Jim Fingal
+              , for Music Tech Hack Night LA. Source code available at 
+              a(href="https://github.com/jimmytheleaf/skynetheremin", target="_blank") Github
+              .
+
