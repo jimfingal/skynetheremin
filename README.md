@@ -28,7 +28,7 @@ There are three major components: the server, the broadcaster, and the web clien
 
 The server is a lightweight express app written in node. Basically all it does is handle websockets between the web clients, and re-broadcasts information from the broadcaster to each web client.
 
-To run the server:
+To run the server locally:
 
     node app/server.js
 
@@ -59,4 +59,9 @@ The sound is synthesized using Web Audio.
 The basic UI was inspired by (and/or reverse-engineered from) the Theremin by [Femur Designs](http://www.femurdesign.com/theremin/).
 
 
+## Deployment
 
+This node app is set up to deploy to heroku. To do so, websockets must be enabled. For more information, check out the following articles:
+
+* https://devcenter.heroku.com/articles/getting-started-with-nodejs
+* https://devcenter.heroku.com/articles/node-websockets
