@@ -6,6 +6,8 @@ require.config({
       'bootstrap': 'bower_components/bootstrap/dist/js/bootstrap.min',
       'underscore' : 'bower_components/underscore/underscore',
       'socket.io' : 'bower_components/socket.io-client/dist/socket.io.min',
+      // Comment out this line to go back to loading
+      // the non-optimized main.js source file.
       'main': 'main-built'
     },
     'shim': {
