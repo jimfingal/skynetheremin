@@ -26,7 +26,7 @@ define(function() {
     transposeNoteToScale: function(n, scale) {
 
       var octaves, leftover, note_in_scale;
-      var scale_length = scale.length - 1;
+      var scale_length = scale.length;
 
       if (n >= 0) {
         octaves = Math.floor(n / scale_length);
