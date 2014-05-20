@@ -1,28 +1,4 @@
-requirejs.config({
-    'baseUrl': 'bower_components',
-    'paths': {
-      'js' : '../js',
-      'lib' : '../lib',
-      'jquery': 'jquery/dist/jquery.min',
-      'jquery-ui': 'jquery-ui/ui/jquery-ui',
-      'bootstrap': 'bootstrap/dist/js/bootstrap.min',
-      'Tuna' : '../lib/tuna',
-      'underscore' : 'underscore/underscore'
-    },
-    'shim': {
-        'jquery': {
-            exports: 'jQuery'
-        },
-        'jquery-ui': {
-            deps: ['jquery']
-        },
-        'bootstrap': {
-          deps: ['jquery']
-        }
-    }
-});
-
-requirejs(['socket.io/socket.io.js',
+requirejs(['socket.io',
           'js/theremin.js',
           'js/visualizer.js',
           'js/leapinterface',

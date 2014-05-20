@@ -1,2 +1,4 @@
 /node_modules/
 *bower_components*
+*main-built.js
+r.js
