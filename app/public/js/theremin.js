@@ -28,7 +28,9 @@ function(_, mixer, SkynetSynth, UserInput, $) {
 
     leap_interface = li;
 
-    leap_interface.setCommandCallback('power', skynet_synth.togglePower);
+    leap_interface.setCommandCallback('poweron', skynet_synth.turnOn);
+    leap_interface.setCommandCallback('poweroff', skynet_synth.turnOff);
+
     leap_interface.addMessageCallback(Skynetheremin.updateSound);
 
     var mouseSound = function(x, y) {

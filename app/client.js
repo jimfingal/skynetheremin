@@ -23,6 +23,8 @@ var log = bunyan.createLogger({
 
 var MessageHandler = function() {
 
+  var power_on = false;
+
   var message = {
     'inputs' : [],
     'commands' : []
@@ -57,6 +59,25 @@ var MessageHandler = function() {
 
   };
 
+  var pushCommandFromCurrentPower = function() {
+
+      if (power_on) {
+        message.commands.push('poweron');
+      } else {
+        message.commands.push('poweroff');
+      }
+
+  };
+
+  var togglePower = function() {
+
+      if (power_on) {
+        power_on = false;
+      } else {
+        power_on = true;
+      }
+  };
+
   this.messageFromFrame = function(frame) {
 
     resetMessage(message);
@@ -66,8 +87,10 @@ var MessageHandler = function() {
     });
 
     if ('space' in frame_keypresses) {
-      message.commands.push('power');
+      togglePower();
     }
+
+    pushCommandFromCurrentPower();
 
     resetKeypresses();
 

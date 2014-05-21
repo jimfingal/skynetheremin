@@ -25,14 +25,20 @@ define(['js/context.js',
         volume.connect(envelope.input);
         envelope.connect(output);
 
-        var turnOn = function() {
-            on = true;
-            envelope.rampUp();
+        this.turnOn = function() {
+
+            if (!on) {
+                on = true;
+                envelope.rampUp();
+            }
         };
 
-        var turnOff = function() {
-            on = false;
-            envelope.rampDown();
+        this.turnOff = function() {
+
+            if (on) {
+                on = false;
+                envelope.rampDown();
+            }
         };
 
         var fadeNote = function(note) {
@@ -84,9 +90,9 @@ define(['js/context.js',
 
         this.togglePower = function() {
             if (on) {
-              turnOff();
+              this.turnOff();
             } else {
-              turnOn();
+              this.turnOn();
             }
         };
 
