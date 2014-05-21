@@ -61,12 +61,12 @@ The basic UI was inspired by (and/or reverse-engineered from) the Theremin by [F
 
 ## Deployment
 
-This node app is set up to deploy to heroku. To do so, websockets must be enabled. For more information, check out the following articles:
+This node app is set up to deploy to heroku. To do so, websockets must be enabled. In addition, the buildpack should be set to the node.js pack:
+
+    heroku config:add BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-nodejs
+    heroku labs:enable websockets
+
+For more information, check out the following articles:
 
 * https://devcenter.heroku.com/articles/getting-started-with-nodejs
 * https://devcenter.heroku.com/articles/node-websockets
-
-In addition, the buildpack should be set to the node.js pack:
-
-    heroku config:add BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-nodejs
-
