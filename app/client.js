@@ -67,16 +67,6 @@ var MessageHandler = function() {
       message.inputs.push({ x: hand.palmX, y: hand.palmY, z: hand.palmZ });
     });
 
-    _.forEach(frame.gestures, function(gesture) {
-
-      /*
-      if (gesture.type === 'keyTap') {
-         message.commands.push('power');
-      }
-      */
-
-    });
-
     if ('space' in frame_keypresses) {
       message.commands.push('power');
     }
