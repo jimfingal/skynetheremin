@@ -1,17 +1,27 @@
 'use strict';
-
-var target = process.argv[2];
-
-if (target === undefined) {
-  console.log('Must have a host. Ex: http://localhost:4000');
-  process.kill();
-}
-
 var Cylon = require('cylon');
 var _ = require('underscore');
 var io = require('socket.io-client');
-var socket = io.connect(target);
 var keypress = require('keypress');
+var bunyan = require('bunyan');
+
+
+var argv = require('minimist')(process.argv.slice(2));
+console.dir(argv);
+var target = argv._[0] || 'http://skynetheremin.herokuapp.com/';
+var loglevel = argv['debug'] ? 'debug' : 'info'; 
+
+
+var socket = io.connect(target);
+var log = bunyan.createLogger({
+    name: 'skynetbroadcaster',
+    stream: process.stdout,
+    level: loglevel
+  }
+);
+
+
+
 
 var MessageHandler = function() {
 
@@ -39,7 +49,7 @@ var MessageHandler = function() {
     process.stdin.resume();
 
     process.stdin.on('keypress', function(ch, key) {
-      Logger.debug('got "keypress"', key);
+      log.debug('got "keypress"', key);
       if (key && key.ctrl && key.name == 'c') {
         process.kill();
       } else {
@@ -85,11 +95,11 @@ var handler = new MessageHandler();
 var process_frame = function(my) {
   
   my.leapmotion.on('connect', function() {
-    Logger.info('Connected');
+    log.info('Connected');
   });
 
   my.leapmotion.on('start', function() {
-    Logger.info('Started');
+    log.info('Started');
   });
 
   my.leapmotion.on('frame', function(frame) {
@@ -97,7 +107,7 @@ var process_frame = function(my) {
     var message = handler.messageFromFrame(frame);
 
     if (message.commands.length || message.inputs.length) {
-      Logger.debug(message);
+      log.debug(message);
     }
 
     socket.emit('send', message);
