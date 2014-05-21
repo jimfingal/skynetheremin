@@ -38,18 +38,18 @@ The broadcaster handles reading information from the Leap Motion, and sending th
 
 To run the broadcaster:
 
-    node app/client.js [target]
+    node app/client.js [target] [--debug]
 
 Ex:
 
-    node app/client.js http://skynetheremin.herokuapp.com/
+    node app/client.js http://skynetheremin.herokuapp.com/ --debug
 
 Press spacebar to start and stop broadcasting.
 
 ### Web Client
 
-The web client so far works well on Chrome and works (???) on Firefox and Safari. The main features are:
-
+The web client so far works well on Chrome and works (???) on Firefox and Safari. (Tested on Mavericks.) The main features are:
+ 
 * Accepts mouse dragging inputs from the user to create sound
 * Renders sound into a pleasant-looking visualization
 * Establishes a connection to the remote server to receive instructions from the broadcaster
