@@ -21,8 +21,6 @@ var log = bunyan.createLogger({
 );
 
 
-
-
 var MessageHandler = function() {
 
   var message = {
