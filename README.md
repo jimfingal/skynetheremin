@@ -32,6 +32,12 @@ To run the server locally:
 
     node app/server.js
 
+The server makes use of require.js's r.js optimization script to speed up file retrieval. This should run automatically when npm install is run. To re-run, issue the following command:
+
+    node node_modules/.bin/r.js -o requirebuild.js
+
+To turn off the use of this optimized file (i.e. while testing), comment out the appropriate line in require-main.js.
+
 ### Broadcaster
 
 The broadcaster handles reading information from the Leap Motion, and sending that information to the server. It makes use of [Cylon.js](https://github.com/hybridgroup/cylon-leapmotion) to 
