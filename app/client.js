@@ -21,6 +21,11 @@ var log = bunyan.createLogger({
 );
 
 
+var sendMessage = function(message) {
+  socket.emit('send', message);
+}
+
+
 var MessageHandler = function() {
 
   var power_on = false;
@@ -43,22 +48,6 @@ var MessageHandler = function() {
     });
   };
 
-  var setupKeyboardInput = function() {
-    keypress(process.stdin);
-    process.stdin.setRawMode(true);
-    process.stdin.resume();
-
-    process.stdin.on('keypress', function(ch, key) {
-      log.debug('got "keypress"', key);
-      if (key && key.ctrl && key.name == 'c') {
-        process.kill();
-      } else {
-        frame_keypresses[key.name] = true;
-      }
-    });
-
-  };
-
   var pushCommandFromCurrentPower = function() {
 
       if (power_on) {
@@ -68,6 +57,38 @@ var MessageHandler = function() {
       }
 
   };
+
+  var exitProcess = function() {
+
+    // Graceful closure -- turn off all clients
+    if (power_on) {
+      power_on = false;
+      pushCommandFromCurrentPower();
+      sendMessage(message);
+    }
+
+    process.kill();
+
+  }
+
+  var setupKeyboardInput = function() {
+    keypress(process.stdin);
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
+
+    process.stdin.on('keypress', function(ch, key) {
+      log.debug('got "keypress"', key);
+
+      if (key && key.ctrl && key.name == 'c') {
+        exitProcess();
+      } else {
+        frame_keypresses[key.name] = true;
+      }
+    });
+
+  };
+
+
 
   var togglePower = function() {
 
@@ -121,7 +142,7 @@ var process_frame = function(my) {
       log.debug(message);
     }
 
-    socket.emit('send', message);
+    sendMessage(message);
 
   });
 
