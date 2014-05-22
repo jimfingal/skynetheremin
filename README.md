@@ -7,7 +7,7 @@ A distributed theremin, powered by a Leap Motion controller, a user-interface de
 
 ## Demo App Usage
 
-Using Chrome, go to: http://skynetheremin.herokuapp.com/
+Using Chrome, Firefox, or Safari (preferred in that general order), go to: http://skynetheremin.herokuapp.com/
 
 Click and drag on the screen to make your own music.
 
