@@ -44,11 +44,11 @@ The broadcaster handles reading information from the Leap Motion, and sending th
 
 To run the broadcaster:
 
-    node app/client.js [target] [--debug]
+    node app/broadcaster.js [target] [--debug]
 
 Ex:
 
-    node app/client.js http://skynetheremin.herokuapp.com/ --debug
+    node app/broadcaster.js http://skynetheremin.herokuapp.com/ --debug
 
 Press spacebar to start and stop broadcasting.
 
