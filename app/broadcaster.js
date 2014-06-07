@@ -8,9 +8,9 @@ var bunyan = require('bunyan');
 
 var argv = require('minimist')(process.argv.slice(2));
 console.dir(argv);
-var target = argv._[0]
-//var target = argv._[0] || 'http://skynetheremin.herokuapp.com/';
-var loglevel = argv['debug'] ? 'debug' : 'info'; 
+//var target = argv._[0]
+var target = argv._[0] || 'http://skynetheremin.herokuapp.com/';
+var loglevel = argv['debug'] ? 'debug' : 'info';
 
 
 var socket = io.connect(target);
@@ -21,12 +21,12 @@ var log = bunyan.createLogger({
   }
 );
 
-log.info("Target: " + target)
+log.info("Target: " + target);
 
 
 var sendMessage = function(message) {
   socket.emit('send', message);
-}
+};
 
 
 var MessageHandler = function() {
@@ -72,7 +72,7 @@ var MessageHandler = function() {
 
     process.kill();
 
-  }
+  };
 
   var setupKeyboardInput = function() {
     keypress(process.stdin);
