@@ -21,7 +21,7 @@ app.get('/', function(req, res) {
 });
 
 var server = http.createServer(app);
-var serverio = io.listen(server).set('log level', 2);
+var serverio = io.listen(server);
 server.listen(app.get('port'));
 console.log('listening on port ' + app.get('port'));
 

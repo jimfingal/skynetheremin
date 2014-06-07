@@ -5,7 +5,7 @@ require.config({
       'jquery-ui': 'bower_components/jquery-ui/ui/jquery-ui',
       'bootstrap': 'bower_components/bootstrap/dist/js/bootstrap.min',
       'underscore' : 'bower_components/underscore/underscore',
-      'socket.io' : 'bower_components/socket.io-client/dist/socket.io.min',
+      'socket.io' : 'bower_components/socket.io-client/socket.io',
       // Comment out this line to go back to loading
       // the non-optimized main.js source file.
       'main': 'main-built'
@@ -21,5 +21,6 @@ require.config({
           deps: ['jquery']
         }
     },
+    "waitSeconds": 0
 });
 require(["main"]);

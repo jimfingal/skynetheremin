@@ -5,7 +5,7 @@
       'jquery-ui': 'bower_components/jquery-ui/ui/jquery-ui',
       'bootstrap': 'bower_components/bootstrap/dist/js/bootstrap.min',
       'underscore' : 'bower_components/underscore/underscore',
-      'socket.io' : 'bower_components/socket.io-client/dist/socket.io.min',
+      'socket.io' : 'bower_components/socket.io-client/socket.io',
     },
     'shim': {
         'jquery': {

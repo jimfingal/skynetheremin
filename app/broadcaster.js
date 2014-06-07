@@ -8,7 +8,8 @@ var bunyan = require('bunyan');
 
 var argv = require('minimist')(process.argv.slice(2));
 console.dir(argv);
-var target = argv._[0] || 'http://skynetheremin.herokuapp.com/';
+var target = argv._[0]
+//var target = argv._[0] || 'http://skynetheremin.herokuapp.com/';
 var loglevel = argv['debug'] ? 'debug' : 'info'; 
 
 
@@ -19,6 +20,8 @@ var log = bunyan.createLogger({
     level: loglevel
   }
 );
+
+log.info("Target: " + target)
 
 
 var sendMessage = function(message) {

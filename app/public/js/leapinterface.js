@@ -53,6 +53,8 @@ define(['underscore'], function(_) {
 
     var processMessage = function(message) {
 
+      //console.log(message);
+
       _.each(message.commands, function(command) {
         processCommand(command);
       });
