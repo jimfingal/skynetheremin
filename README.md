@@ -7,7 +7,7 @@ A distributed theremin, powered by a Leap Motion controller, a user-interface de
 
 ## Demo App Usage
 
-Using Chrome, go to: http://skynetheremin.herokuapp.com/
+Using Chrome, Firefox, or Safari (preferred in that general order), go to: http://skynetheremin.herokuapp.com/
 
 Click and drag on the screen to make your own music.
 
@@ -54,7 +54,7 @@ Press spacebar to start and stop broadcasting.
 
 ### Web Client
 
-The web client so far works well on Chrome and works (???) on Firefox and Safari. (Tested on Mavericks.) The main features are:
+The web client has been tested on Chrome, Firefox, and Safari. (Tested on Mavericks.) The main features are:
  
 * Accepts mouse dragging inputs from the user to create sound
 * Renders sound into a pleasant-looking visualization
