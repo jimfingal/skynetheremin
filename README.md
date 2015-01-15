@@ -40,7 +40,7 @@ To turn off the use of this optimized file (i.e. while testing), comment out the
 
 ### Broadcaster
 
-The broadcaster handles reading information from the Leap Motion, and sending that information to the server. It makes use of [Cylon.js](https://github.com/hybridgroup/cylon-leapmotion) to 
+The broadcaster handles reading information from the Leap Motion, and sending that information to the server. It makes use of [Cylon.js](https://github.com/hybridgroup/cylon-leapmotion) to translate between the Leap Motion and give you callbacks that you can override in reaction to sensor events.
 
 To run the broadcaster:
 
